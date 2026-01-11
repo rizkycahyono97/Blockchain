@@ -14,7 +14,11 @@ class Blockchain(object):
     difficulty_target = "0000"
 
     def hash_block(self, block):
-        block_encoded = json.dumps(block, sort_keys=True).encode()  # harus di json dump dahulu baru di encode baru bisa di hash
+        # supaya hash di current_block itu sendiri tidak di hash lagi
+        block_copy = block.copy()
+        block_copy.pop('hash', None)
+
+        block_encoded = json.dumps(block_copy, sort_keys=True).encode()  # harus di json dump dahulu baru di encode baru bisa di hash
         return hashlib.sha256(block_encoded).hexdigest() #hexdigest merubah dari hash sha256 menjadi hex string
 
     # genesis block / block pertama
@@ -22,12 +26,17 @@ class Blockchain(object):
         self.chain = []
         self.current_transactions = []
 
-        genesis_hash = self.hash_block("genesis_block")
+        genesis_block = {
+            'index': 1,
+            'timestamps': time(),
+            'transactions': [],
+            'nonce': 0,
+            'hash_of_previous_block': "0"
+        }
 
-        self.append_block(
-            hash_of_previous_block = genesis_hash,
-            nonce = self.proof_of_work(0, genesis_hash, []) #mining
-        )
+        genesis_block['hash'] = self.hash_block(genesis_block)
+
+        self.chain.append(genesis_block)
 
     # POW disini, loop sampai nonce ketemu
     def proof_of_work(self, index, hash_of_previous_block, transactions):
@@ -55,11 +64,33 @@ class Blockchain(object):
             "hash_of_previous_block": hash_of_previous_block,
         }
 
+        block['hash'] = self.hash_block(block)  # hash di block itu sendiri
+
         # reset block
         self.current_transactions = []
 
         self.chain.append(block)
         return block
+    
+    # validasi previous hash harus sama dengan hash
+    def is_chain_valid(self):
+        for i in range(1, len(self.chain)):
+            current = self.chain[i]
+            previous  = self.chain[i -1]
+
+            if current['previous_hash'] != previous['hash']:
+                return False
+            
+            if not self.valid_proof(
+                current['index'],
+                current['previous_hash'],
+                current['transactions'],
+                current['nonce']
+            ):
+                return False
+            
+        return True
+
     
     # contoh untuk menambahkan transaction, hanya transaction bukan membuat block
     def add_transaction(self, sender, recipient, amount):
@@ -105,7 +136,7 @@ def mine_block():
         amount=1 #jumlah yang dikirim, misalkan 1 btc
     )
 
-    last_block_hash = blockchain.hash_block(blockchain.last_block)
+    last_block_hash = blockchain.last_block['hash']
 
     index = len(blockchain.chain)
     
