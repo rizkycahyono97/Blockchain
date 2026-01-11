@@ -24,7 +24,7 @@ class Blockchain(object):
     # genesis block / block pertama
     def __init__(self):
         self.chain = []
-        self.current_transactions = []
+        self.current_transactions = [] #mempool (jadi transaction baru tidak masuk ke current_block, tetapi mempool)
 
         genesis_block = {
             'index': 1,
@@ -59,7 +59,7 @@ class Blockchain(object):
         block = {
             "index": len(self.chain) + 1,   #urutan block
             "timestamp": time(),
-            "transaction": self.current_transactions,
+            "transaction": self.current_transactions,    #mempool
             "nonce": nonce,
             "hash_of_previous_block": hash_of_previous_block,
         }
@@ -78,12 +78,12 @@ class Blockchain(object):
             current = self.chain[i]
             previous  = self.chain[i -1]
 
-            if current['previous_hash'] != previous['hash']:
+            if current['hash_of_previous_block'] != previous['hash']:
                 return False
             
             if not self.valid_proof(
                 current['index'],
-                current['previous_hash'],
+                current['hash_of_previous_block'],
                 current['transactions'],
                 current['nonce']
             ):
@@ -150,6 +150,7 @@ def mine_block():
         'message': 'Blockchain berhasil di tambang',
         'index': block['index'],
         'hash_of_previous_block': block['hash_of_previous_block'],
+        'hash': block['hash'],
         'nonce': block['nonce'],
         'transaction': block['transaction']
     }
