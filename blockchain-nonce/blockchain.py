@@ -23,6 +23,7 @@ class Blockchain(object):
 
     # genesis block / block pertama
     def __init__(self):
+        self.nodes = set() #tempat untuk nodes
         self.chain = []
         self.current_transactions = [] #mempool (jadi transaction baru tidak masuk ke current_block, tetapi mempool)
 
@@ -37,6 +38,12 @@ class Blockchain(object):
         genesis_block['hash'] = self.hash_block(genesis_block)
 
         self.chain.append(genesis_block)
+
+    # fungsi untuk menambah node komputer lain
+    def add_node(self, address):
+        parse_url = urlparse(address)
+        self.nodes.add(parse_url.netloc)
+        print(parse_url.netloc)
 
     # POW disini, loop sampai nonce ketemu
     def proof_of_work(self, index, hash_of_previous_block, transactions):
@@ -73,23 +80,52 @@ class Blockchain(object):
         return block
     
     # validasi previous hash harus sama dengan hash
-    def is_chain_valid(self):
-        for i in range(1, len(self.chain)):
-            current = self.chain[i]
-            previous  = self.chain[i -1]
+    def is_chain_valid(self, chain):
+        last_block = chain[0]
+        current_index = 1
 
-            if current['hash_of_previous_block'] != previous['hash']:
+        while current_index < len(chain):
+            block = chain[current_index]
+
+            if block['hash_of_previous_block'] != self.hash_block(last_block):
                 return False
-            
+
             if not self.valid_proof(
-                current['index'],
-                current['hash_of_previous_block'],
-                current['transactions'],
-                current['nonce']
+                current_index,
+                block['hash_of_previous_block'],
+                block['transaction'],
+                block['nonce'],
             ):
                 return False
-            
+        
+            last_block = block
+            current_index += 1
+
         return True
+        
+    
+    def update_blockchain(self):
+        neighbours = self.nodes
+        new_chain = None
+
+        max_length = len(self.chain)
+
+        for node in neighbours:
+            response  = requests.get(f'http://{node}/blockchain')
+
+            if response.status_code == 200:
+                length = response.json()['length']
+                chain = response.json()['chain']
+
+                if length > max_length and self.is_chain_valid(chain):
+                    max_length = length
+                    new_chain = chain
+
+                if new_chain:
+                    self.chain = new_chain
+                    return True
+
+        return False 
 
     
     # contoh untuk menambahkan transaction, hanya transaction bukan membuat block
@@ -175,6 +211,43 @@ def new_transaction():
     response = {'message': f'Transaksi akan ditambahkan di block: {index}'}
 
     return (jsonify(response), 201)
+
+# menambahkan node ke network
+@app.route('/nodes/add_nodes', methods=['POST'])
+def add_node():
+    values = request.get_json()
+    nodes = values.get('nodes')
+
+    if nodes is None:
+        return "Error node is missinh", 400
+
+    for node in nodes:
+        blockchain.add_node(node)
+
+    response = {
+        'message': 'NOde baru telah ditambahkan',
+        'nodes': list(blockchain.nodes)
+    }
+
+    return (jsonify(response), 201)
+
+@app.route('/nodes/sync', methods=['GET'])
+def sync():
+    updated_node = blockchain.update_blockchain()
+
+    if updated_node:
+        response = {
+            'message': 'NOde berhasil di sync',
+            'blockchain': blockchain.chain
+        }   
+    else:
+        response = {
+            'message': 'Node sudah paling baru',
+            'blockchain': blockchain.chain
+        }
+
+    return jsonify(response), 200
+
 
 if __name__ == '__main__':
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
