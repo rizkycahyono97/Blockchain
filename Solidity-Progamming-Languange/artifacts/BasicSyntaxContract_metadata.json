@@ -1,0 +1,72 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "get",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "x",
+						"type": "uint256"
+					}
+				],
+				"name": "set",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/BasicSyntaxContract.sol": "BasicSyntaxContract"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/BasicSyntaxContract.sol": {
+			"keccak256": "0x79b2c8c0b613895864c7086ac1838a3ced5d05737bbab9e14f77b16cf0878fa1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://94cd8c47412ca908d7e6250cd379c24d2911d8bf651c7e299ef04e522325148f",
+				"dweb:/ipfs/QmTaesjZQANjiNX9FhEhspnvtvYqHyXWf4VGJrVLE7endM"
+			]
+		}
+	},
+	"version": 1
+}
