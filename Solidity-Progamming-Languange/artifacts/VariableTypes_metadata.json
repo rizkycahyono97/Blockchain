@@ -7,7 +7,7 @@
 		"abi": [
 			{
 				"inputs": [],
-				"name": "get",
+				"name": "getHasil",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -22,11 +22,16 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "x",
+						"name": "num1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "num2",
 						"type": "uint256"
 					}
 				],
-				"name": "set",
+				"name": "tambah",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -45,7 +50,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/BasicSyntaxContract.sol": "BasicSyntaxContract"
+			"contracts/VariableTypes.sol": "VariableTypes"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -59,12 +64,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/BasicSyntaxContract.sol": {
-			"keccak256": "0xb56cd8fd52af9ea55e5925288b314b3e0a03fdecda38da1ccb4dc06aa5d05bca",
+		"contracts/VariableTypes.sol": {
+			"keccak256": "0x85b152adb3c6fbfbab438b63d4a7fd3e1a02789bc92822e39f2290d1f07a887f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d99b91769dc205d52276564d46f446f0624da4e2c90a21a88640a1f7060c3f65",
-				"dweb:/ipfs/QmPgaEG7EWc6n1K6cAdR4rCwB5WL2gBrEmSqrjzcN2WBBr"
+				"bzz-raw://7b1ae75150d5a559bc93e84f20b6a7ebc7b573f85129313998dc8d31f8cf7434",
+				"dweb:/ipfs/QmXNZMxNu1Ar2EYt4LzcKnbbu78rE5pnewjUdaPV2Cnunc"
 			]
 		}
 	},
