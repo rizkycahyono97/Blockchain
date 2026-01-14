@@ -7,16 +7,16 @@ contract ArrayContract {
         - untuk membuat fixed array
     */
     function getArray() public pure returns (uint[5] memory) {
-        uint[5] memory data = [uint(50), 60, 70, 80, 100];
-        return data;
+        uint[5] memory data2 = [uint(50), 60, 70, 80, 100];
+        return data2;
     }
 
     /*
         - untuk  mengambil index array
     */
     function getArrayIndex() public pure returns (uint) {
-        uint[5] memory data = [uint(50), 60, 70, 80, 100];
-        return data[1];
+        uint[5] memory data3 = [uint(50), 60, 70, 80, 100];
+        return data3[1];
     }
 
     /*
