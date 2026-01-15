@@ -32,7 +32,7 @@ contract Structure {
         return (buku2.author, buku2.id);
     }
 
-    /*
+    /*smart contract
         - membuat Struct menggunakan Array
     */
     Buku[] public buku3;
