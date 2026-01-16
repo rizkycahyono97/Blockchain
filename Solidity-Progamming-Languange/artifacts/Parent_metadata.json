@@ -6,58 +6,14 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
-				"inputs": [],
-				"name": "getData",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "info",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "setIncrement",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "a",
+						"name": "_id",
 						"type": "uint256"
 					}
 				],
-				"name": "updateData",
+				"name": "setValue",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -76,7 +32,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Contract.sol": "Parent"
+			"contracts/Inheritance.sol": "Parent"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -90,12 +46,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/Contract.sol": {
-			"keccak256": "0x99586cc82f1f88ffaa99b9026743251eb81bc89aeab64ada1bdc950aff38d2f6",
+		"contracts/Inheritance.sol": {
+			"keccak256": "0x0eb7190cc80aa916e242bc5d349bfe8c23ae38d22c7e42fe9d33d39b49eaa85a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9677a3081abcc383bfcb1af56eb8e1d0d7e63effb9f8d6f13ab677ad7e091dc5",
-				"dweb:/ipfs/QmVDpDH2TTsDJJi3SZW8LqYB7ZvVCW3783T4DQ7UmBXpBd"
+				"bzz-raw://f71c317d8372f290d3d5a3d2738d366106bdf9bd0b6728be4e432b421e0dac59",
+				"dweb:/ipfs/QmevjvXqreVLwvFxTAARkqis6Xpw5khPwfr2nupCcubz2Z"
 			]
 		}
 	},

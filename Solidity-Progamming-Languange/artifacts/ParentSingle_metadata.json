@@ -6,19 +6,6 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"name": "getValue",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -45,7 +32,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Inheritance.sol": "Child"
+			"contracts/Inheritance.sol": "ParentSingle"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -60,11 +47,11 @@
 	},
 	"sources": {
 		"contracts/Inheritance.sol": {
-			"keccak256": "0x0eb7190cc80aa916e242bc5d349bfe8c23ae38d22c7e42fe9d33d39b49eaa85a",
+			"keccak256": "0xb071ce8c214b9328fd3a313194d7c00f705ef78d22a0c030dc9e9932dfcb5b81",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f71c317d8372f290d3d5a3d2738d366106bdf9bd0b6728be4e432b421e0dac59",
-				"dweb:/ipfs/QmevjvXqreVLwvFxTAARkqis6Xpw5khPwfr2nupCcubz2Z"
+				"bzz-raw://668ccff84269f303437b987d0010644923297d9ce35d52eeef030499c390443e",
+				"dweb:/ipfs/QmYAokPjEe7CrCQXXLMDR2Y6xkzCNHt1DV4FhMp6JwL4Ys"
 			]
 		}
 	},

@@ -7,28 +7,20 @@
 		"abi": [
 			{
 				"inputs": [],
-				"name": "getValue",
+				"name": "warisan",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "",
-						"type": "uint256"
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_id",
-						"type": "uint256"
-					}
-				],
-				"name": "setValue",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -45,7 +37,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Inheritance.sol": "Child"
+			"contracts/HierarchyInheritace.sol": "caller"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -59,12 +51,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/Inheritance.sol": {
-			"keccak256": "0x0eb7190cc80aa916e242bc5d349bfe8c23ae38d22c7e42fe9d33d39b49eaa85a",
+		"contracts/HierarchyInheritace.sol": {
+			"keccak256": "0xc8da4133379fd1366b497cf202b0b470a50465a200c137bbab1a5407263d0e06",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f71c317d8372f290d3d5a3d2738d366106bdf9bd0b6728be4e432b421e0dac59",
-				"dweb:/ipfs/QmevjvXqreVLwvFxTAARkqis6Xpw5khPwfr2nupCcubz2Z"
+				"bzz-raw://af23fad3f49c49ac02c78829ec6c8589a5933845f5f06f6f018ffce8cbe18cbe",
+				"dweb:/ipfs/QmPrdq8uA1ZvRnHL77mbf2azVf6ALoCCdEG6v9uoaN4wdB"
 			]
 		}
 	},
