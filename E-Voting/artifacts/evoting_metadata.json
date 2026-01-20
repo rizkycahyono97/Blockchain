@@ -67,6 +67,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "_voting",
+						"type": "bool"
+					}
+				],
+				"name": "mulaiVoting",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "owner",
 				"outputs": [
@@ -74,6 +87,19 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "sudahBisaVoting",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -90,6 +116,19 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_urutanKandidat",
+						"type": "uint256"
+					}
+				],
+				"name": "voting",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -121,11 +160,11 @@
 	},
 	"sources": {
 		"contracts/evoting.sol": {
-			"keccak256": "0x61ee1f6ee1196aafbba6fcfd04542a00ebafcd57bfe7458f3b724446de5875b9",
+			"keccak256": "0xbb0ca30feef05a4345e5eaadcf2191295f819d99cfbd0c2f7abdef9b9bc64806",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://05975d026897f57e7a422a6adfa3e1996fc37a8598eb05a5bb3ee6dd929484bc",
-				"dweb:/ipfs/QmRar4AJPRtsdwpHkZYsrWW2qgDWEtxN5FukUmzQXkwGhb"
+				"bzz-raw://ae03fedbbbae03a78fe41555aabaa36c3c85a2bfca2129866800c38c3c73bde4",
+				"dweb:/ipfs/QmaieRmntzMEgfaJVBo6NERYnbyDFx3buiDc42p5GJUu9h"
 			]
 		}
 	},

@@ -6,9 +6,11 @@ pragma solidity >=0.8.2 <0.9.0;
 */
 contract evoting {
     address public owner; //owner itu yang membuat/ketua voting tersebut
+    bool public sudahBisaVoting;
 
     constructor() {
         owner = msg.sender;
+        sudahBisaVoting  = false;
     }
 
     struct Kandidat {
@@ -38,4 +40,20 @@ contract evoting {
     function totalKandidat() public  view returns (uint) {
         return kandidat.length;
     }
+
+    /*
+        - cek apakah sudah bisa voting
+    */
+    function mulaiVoting(bool _voting) public {
+        require(msg.sender == owner, "Anda bukan owner, hanya owner yang bisa mendaftarkan kandidat");
+        sudahBisaVoting = _voting;
+    }
+
+    /*
+        - untuk memilih kandidat
+    */
+    function voting(uint _urutanKandidat) public {
+        require(sudahBisaVoting == true, "Voting belum dimulai");
+        kandidat[_urutanKandidat].jumlahSuara++;
+    } 
 }
