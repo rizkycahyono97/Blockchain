@@ -26,6 +26,70 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "isKandidatTerdaftar",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "isSudahBisaVoting",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "isUserSudahMemilih",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "isVotingSelesai",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -42,25 +106,6 @@
 						"internalType": "uint256",
 						"name": "jumlahSuara",
 						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "kandidatTerdaftar",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -94,12 +139,17 @@
 			},
 			{
 				"inputs": [],
-				"name": "sudahBisaVoting",
+				"name": "pemenang",
 				"outputs": [
 					{
-						"internalType": "bool",
+						"internalType": "address",
 						"name": "",
-						"type": "bool"
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -127,6 +177,13 @@
 					}
 				],
 				"name": "voting",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "votingSelesai",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -160,11 +217,11 @@
 	},
 	"sources": {
 		"contracts/evoting.sol": {
-			"keccak256": "0xbb0ca30feef05a4345e5eaadcf2191295f819d99cfbd0c2f7abdef9b9bc64806",
+			"keccak256": "0x063bdb4a04bead7b6db9ddbf666f73612188e0e01fa518f6a70e9a53389362ee",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ae03fedbbbae03a78fe41555aabaa36c3c85a2bfca2129866800c38c3c73bde4",
-				"dweb:/ipfs/QmaieRmntzMEgfaJVBo6NERYnbyDFx3buiDc42p5GJUu9h"
+				"bzz-raw://d1cc62d8b28148de83ee951b0d9effaf64a2191ec2cca494287580ca77d699e2",
+				"dweb:/ipfs/QmTy6QWE2kNqnkUjxtJhok3zpwrHY7xtadApF5jTcBXBmH"
 			]
 		}
 	},
