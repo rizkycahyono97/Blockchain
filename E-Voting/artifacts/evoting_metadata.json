@@ -217,11 +217,11 @@
 	},
 	"sources": {
 		"contracts/evoting.sol": {
-			"keccak256": "0x063bdb4a04bead7b6db9ddbf666f73612188e0e01fa518f6a70e9a53389362ee",
+			"keccak256": "0xf660ec1b516c21da17ba6629eee8265da44b3272fbf2bdc595afae12318126b5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d1cc62d8b28148de83ee951b0d9effaf64a2191ec2cca494287580ca77d699e2",
-				"dweb:/ipfs/QmTy6QWE2kNqnkUjxtJhok3zpwrHY7xtadApF5jTcBXBmH"
+				"bzz-raw://2a4fc6aa6e2ac4cb0dcc2c333a13471aad9327b64c46162065b16c857459184d",
+				"dweb:/ipfs/QmYp8HnSgkq5tWYvQD6JixZgyiXDsxLLZgfNqTvb82AFVh"
 			]
 		}
 	},

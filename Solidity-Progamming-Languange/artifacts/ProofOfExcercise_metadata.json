@@ -1,0 +1,78 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "document",
+						"type": "string"
+					}
+				],
+				"name": "checkDocument",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "document",
+						"type": "string"
+					}
+				],
+				"name": "notarize",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/GanacheTest.sol": "ProofOfExcercise"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/GanacheTest.sol": {
+			"keccak256": "0xbb97cb429121d7fc0ed537f0f2a1b516be4e377929660d1844dd991fc5f048f7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://34eac06f0ccae94113b8ea42beaf5e69f51d3bb229242686933d4031cd47e582",
+				"dweb:/ipfs/QmSLUEHWw6SSb2dU449GLXTUqSZ3UvuvGgaXV3GF8YKZuD"
+			]
+		}
+	},
+	"version": 1
+}
