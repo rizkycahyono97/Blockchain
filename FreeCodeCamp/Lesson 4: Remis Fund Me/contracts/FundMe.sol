@@ -8,8 +8,13 @@ contract FundMe {
 
     uint256 public minimumUSD = 50 * 1e18; //$50.000000000000000000
 
+    address public  owner;
     address[] public funders;
     mapping(address =>  uint256) public addressToAmountFunded;
+
+    constructor() {
+        owner = msg.sender;
+    }
 
     /*
         - function untuk mengirim uang ke smartcontract
