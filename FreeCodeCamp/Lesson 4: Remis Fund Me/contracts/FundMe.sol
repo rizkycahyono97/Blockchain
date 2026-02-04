@@ -6,21 +6,21 @@ import "./PriceConverter.sol";
 contract FundMe {
     using PriceConverter for uint256;
 
-    uint256 public minimumUSD = 50 * 1e18; //$50.000000000000000000
+    uint256 public constant MINIMUM_USD = 50 * 1e18; //$50.000000000000000000, constant membuat gas lebih irit
 
-    address public  owner;
+    address public immutable i_owner;   //memakai immutable biar irit GAS
     address[] public funders;
     mapping(address =>  uint256) public addressToAmountFunded;
 
     constructor() {
-        owner = msg.sender;
+        i_owner = msg.sender;
     }
 
     /*
-        - function untuk mengirim uang ke smartcontract
+        - function untuk mengirim uang ke smar tcontract
     */
     function fund() public payable {
-        require(msg.value.getConversionRate() >= minimumUSD, "Didn't send enough!"); // 1e18 == 1*10**18 == 1 ETH
+        require(msg.value.getConversionRate() >= MINIMUM_USD, "Didn't send enough!"); // 1e18 == 1*10**18 == 1 ETH
         funders.push(msg.sender);
         addressToAmountFunded[msg.sender] += msg.value; //ditambah terus di addressToAmountFunded
     }
@@ -44,7 +44,7 @@ contract FundMe {
         - modifier untuk hanya owner
     */
     modifier onlyOwner {
-        require(msg.sender == owner, "Sender must be owner");
+        require(msg.sender == i_owner, "Sender must be owner");
         _;  //jika semua true diatas, maka baru jalankan fungsi bawahnya
     } 
 }
