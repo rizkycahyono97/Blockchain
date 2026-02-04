@@ -28,7 +28,7 @@ contract FundMe {
     /*
         - function untuk mereset funders dan mengirimnya ke address kita
     */
-    function withdraw() public {
+    function withdraw() public onlyOwner {
         for (uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++) {
             address funder = funders[funderIndex];
             addressToAmountFunded[funder] = 0; //reset money
@@ -39,4 +39,12 @@ contract FundMe {
         (bool callSuccess, ) = payable(msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Call not success");
     }
+
+    /*
+        - modifier untuk hanya owner
+    */
+    modifier onlyOwner {
+        require(msg.sender == owner, "Sender must be owner");
+        _;  //jika semua true diatas, maka baru jalankan fungsi bawahnya
+    } 
 }
