@@ -16,6 +16,10 @@
 				"type": "error"
 			},
 			{
+				"stateMutability": "payable",
+				"type": "fallback"
+			},
+			{
 				"inputs": [],
 				"name": "MINIMUM_USD",
 				"outputs": [
@@ -92,6 +96,10 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -130,19 +138,19 @@
 			]
 		},
 		"contracts/FundMe.sol": {
-			"keccak256": "0x315f12b7aa4da220a48b7afebbc57b6f8f9715f85f337e02341553894f53ea3f",
+			"keccak256": "0x6038d56ba20efcb57a2b38f36b7b24e54c5d7bad1773a1cb78b76a599365de63",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8c690f1c763a7363604307d75f5e4618f129eb60d4e4d791c0fef4d0f3934a33",
-				"dweb:/ipfs/QmTayTrrGZLPjkRDJRUBVuEr1o4tQDsvFkrvgnXZk7QavJ"
+				"bzz-raw://e9b90e2f9573ebed903b6617d8483571700b8dcf102790a46c228d5f3431273e",
+				"dweb:/ipfs/QmPp5h1ybq9eEkfuX1UjGHhmdUBDkSL5c5VxFjVKFxS8Xd"
 			]
 		},
 		"contracts/PriceConverter.sol": {
-			"keccak256": "0xde57fbca1d13587dab88d0893cb4fc0eef4fd4139c9a0cd4ad040be06316fb69",
+			"keccak256": "0x033cf4391824dd166f36e4634435157033c3f973d00334430b5dfe07286a6633",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://800385682c2fd3a15b3f8b76a70978f96756babd9dba6a3a0b3590a3086a062e",
-				"dweb:/ipfs/QmaFiq1ExL4nTA6xYW73x9vuRF1dVjWYpQS153DHXn7Rw1"
+				"bzz-raw://40db0d4e53627afd99b4a4732128cd4d1d3ac39acfde6833d543ee3d0ab732c2",
+				"dweb:/ipfs/QmPMiz8Ywfd1jKWQi21ytHwyYKWzmea1PghXQaHA89ABXG"
 			]
 		}
 	},
