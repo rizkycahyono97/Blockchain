@@ -11,11 +11,27 @@ contract FundMe {
     address[] public funders;
     mapping(address =>  uint256) public addressToAmountFunded;
 
+    /*
+        - function untuk mengirim uang ke smartcontract
+    */
     function fund() public payable {
         require(msg.value.getConversionRate() >= minimumUSD, "Didn't send enough!"); // 1e18 == 1*10**18 == 1 ETH
         funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] = msg.value;
+        addressToAmountFunded[msg.sender] += msg.value; //ditambah terus di addressToAmountFunded
     }
 
-    
+    /*
+        - function untuk mereset funders dan mengirimnya ke address kita
+    */
+    function withdraw() public {
+        for (uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++) {
+            address funder = funders[funderIndex];
+            addressToAmountFunded[funder] = 0; //reset money
+        }
+        funders = new address[](0); //reset array
+
+        //transfer ke address kita
+        (bool callSuccess, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(callSuccess, "Call not success");
+    }
 }
