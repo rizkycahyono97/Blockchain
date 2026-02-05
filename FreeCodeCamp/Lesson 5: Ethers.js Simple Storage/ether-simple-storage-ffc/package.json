@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "solc": "^0.8.33"
+  },
+  "scripts": {
+    "compile": "npx solcjs --bin --abi --include-path node_modules/ --base-path . SimpleStorage.sol"
+  }
+}
