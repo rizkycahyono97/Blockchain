@@ -24,7 +24,20 @@ async function main() {
   });
   await contract.deployed();
 
-  console.log('Deployed to:', contract.address);
+  // =============================
+  // Interacting with the contract
+  // =============================
+
+  //retrieve
+  const currentNumber = await contract.retrieve();
+  console.log('Current number:', currentNumber.toString());
+
+  //store
+  const transactionResponse = await contract.store('42');
+  await transactionResponse.wait(1);
+
+  const updatedNumber = await contract.retrieve();
+  console.log('Updated number:', updatedNumber.toString());
 }
 
 main();
