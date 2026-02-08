@@ -17,10 +17,11 @@ async function main() {
   console.log('Deploying...');
 
   const contract = await factory.deploy({
-    gasPrice: 20000000000,
+    gasPrice: 10000000000,
     gasLimit: 1000000
   });
   await contract.deployed();
+  console.log('Contract deployed at:', contract.address);
 
   // =============================
   // Interacting with the contract
