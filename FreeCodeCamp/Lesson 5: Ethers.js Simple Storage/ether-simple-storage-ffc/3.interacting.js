@@ -1,12 +1,10 @@
 import { ethers } from 'ethers';
 import fs from 'fs';
+import 'dotenv/config';
 
-const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:7545');
+const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 
-const wallet = new ethers.Wallet(
-  '0x95530aa825c70292095e7ff529d96513eded3b0faaaabc544b81d83d93b72767',
-  provider
-);
+const wallet = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
 
 const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf-8');
 const bytecode = fs.readFileSync(
@@ -33,7 +31,7 @@ async function main() {
   console.log('Current number:', currentNumber.toString());
 
   //store
-  const transactionResponse = await contract.store('42');
+  const transactionResponse = await contract.store('45');
   await transactionResponse.wait(1);
 
   const updatedNumber = await contract.retrieve();
