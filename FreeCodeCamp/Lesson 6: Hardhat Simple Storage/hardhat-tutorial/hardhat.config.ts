@@ -35,5 +35,10 @@ export default defineConfig({
       url: configVariable('SEPOLIA_RPC_URL'), //otomatis langsung ngarah ke .env
       accounts: [configVariable('SEPOLIA_PRIVATE_KEY')]
     }
+  },
+  verify: {
+    etherscan: {
+      apiKey: configVariable('ETHERSCAN_API_KEY')
+    }
   }
 });
