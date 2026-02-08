@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "ethers": "^6.16.0",
-    "solc": "^0.8.33"
+    "ethers": "^5.8.0"
   },
   "scripts": {
     "compile": "./node_modules/.bin/solcjs --bin --abi --include-path node_modules/ --base-path . SimpleStorage.sol"
+  },
+  "devDependencies": {
+    "solc": "^0.8.19"
   }
 }

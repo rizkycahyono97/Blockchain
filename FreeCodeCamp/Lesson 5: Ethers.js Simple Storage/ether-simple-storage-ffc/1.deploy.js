@@ -24,10 +24,15 @@ async function deploy() {
     await contract.waitForDeployment();
     const deploymentReceipt = await contract.deploymentTransaction().wait(1); // wait for 1 confirmation
 
-    console.log(`Berhasil! Alamat: ${contract.target}`);
-    console.log(deploymentReceipt);
+    // ====================== //
+    //  show result from ABI
+    // ====================== //
+    // console.log(`Berhasil! Alamat: ${contract.target}`);
+    // console.log(deploymentReceipt);
 
-    // just for send transaction
+    // ====================== //
+    //  send transaction
+    // ====================== //
     // console.log('Mengirim transaksi...');
     // const nonce = await wallet.getTransactionCount();
     // const tx = {

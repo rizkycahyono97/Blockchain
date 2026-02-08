@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity 0.8.19;
 
 // simple compile with solcjs
 //  npx solcjs --bin --abi --include-path node_modules/ --base-path . SimpleStorage.sol
