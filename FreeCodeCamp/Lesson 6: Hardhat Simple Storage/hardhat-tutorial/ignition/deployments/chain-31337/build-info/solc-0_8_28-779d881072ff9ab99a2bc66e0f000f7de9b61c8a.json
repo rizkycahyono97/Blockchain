@@ -1,0 +1,39 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-779d881072ff9ab99a2bc66e0f000f7de9b61c8a",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/SimpleStorage.sol": "project/contracts/SimpleStorage.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/SimpleStorage.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity >=0.8.28;\n\n// simple compile with solcjs\n//  npx solcjs --bin --abi --include-path node_modules/ --base-path . SimpleStorage.sol\n\ncontract SimpleStorage {\n    uint256 favoriteNumber;\n\n    struct People {\n        uint256 favoriteNumber;\n        string name;\n    }\n    // uint256[] public anArray;\n    People[] public people;\n\n    mapping(string => uint256) public nameToFavoriteNumber;\n\n    function store(uint256 _favoriteNumber) public virtual {\n        favoriteNumber = _favoriteNumber;\n    }\n\n    function retrieve() public view returns (uint256) {\n        return favoriteNumber;\n    }\n\n    function addPerson(string memory _name, uint256 _favoriteNumber) public {\n        people.push(People(_favoriteNumber, _name));\n        nameToFavoriteNumber[_name] = _favoriteNumber;\n    }\n}\n"
+      }
+    }
+  }
+}
