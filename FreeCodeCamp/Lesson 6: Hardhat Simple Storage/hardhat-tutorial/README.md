@@ -1,4 +1,4 @@
-# 👷 Hardhat Simple Storage: Panduan Lengkap
+# 👷 Hardhat Versi 3: _Simple Storage_
 
 Proyek ini merupakan repositori pembelajaran untuk menguasai Hardhat, framework pengembangan Ethereum yang paling populer. Di sini kita mempelajari cara mengompilasi, men-deploy, menguji, dan melakukan debugging Smart Contract secara profesional.
 
@@ -145,5 +145,5 @@ Laporan ini membantu Anda menentukan apakah kontrak Anda terlalu "mahal" untuk d
 ### DOCS RESMI
 
 ```bash
-
+[hardhat versi 3](https://hardhat.org/docs/getting-started)
 ```
