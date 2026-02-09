@@ -142,6 +142,8 @@ npx hardhat test nodejs --gas-stats
 
 Laporan ini membantu Anda menentukan apakah kontrak Anda terlalu "mahal" untuk dijalankan oleh pengguna di Mainnet.
 
+---
+
 ### DOCS RESMI
 
 [hardhat versi 3](https://hardhat.org/docs/getting-started)
