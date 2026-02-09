@@ -1,6 +1,11 @@
 import hardhatToolboxViemPlugin from '@nomicfoundation/hardhat-toolbox-viem';
-import { configVariable, defineConfig } from 'hardhat/config';
+import { configVariable, defineConfig, task } from 'hardhat/config';
 import hardhatEthers from '@nomicfoundation/hardhat-ethers';
+
+// task
+const getBlockNumber = task('block-number', 'Get current blockNumber')
+  .setAction(() => import('./task/block-number.js'))
+  .build();
 
 export default defineConfig({
   plugins: [hardhatToolboxViemPlugin, hardhatEthers],
@@ -40,5 +45,6 @@ export default defineConfig({
     etherscan: {
       apiKey: configVariable('ETHERSCAN_API_KEY')
     }
-  }
+  },
+  tasks: [getBlockNumber]
 });
