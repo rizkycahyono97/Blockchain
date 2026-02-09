@@ -144,6 +144,4 @@ Laporan ini membantu Anda menentukan apakah kontrak Anda terlalu "mahal" untuk d
 
 ### DOCS RESMI
 
-```bash
 [hardhat versi 3](https://hardhat.org/docs/getting-started)
-```
