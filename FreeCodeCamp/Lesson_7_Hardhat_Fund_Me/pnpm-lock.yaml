@@ -12,6 +12,9 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(@types/node@22.19.10)(ethers@6.16.0)
     devDependencies:
+      '@chainlink/local':
+        specifier: 0.2.3
+        version: 0.2.3(@types/node@22.19.10)(ethers@6.16.0)
       '@nomicfoundation/hardhat-ethers':
         specifier: ^4.0.4
         version: 4.0.4(hardhat@3.1.7)
@@ -36,6 +39,9 @@ importers:
       chai:
         specifier: ^5.3.3
         version: 5.3.3
+      dotenv:
+        specifier: ^17.2.4
+        version: 17.2.4
       ethers:
         specifier: ^6.16.0
         version: 6.16.0
@@ -64,9 +70,16 @@ packages:
     resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
     engines: {node: '>=6.9.0'}
 
+  '@chainlink/contracts-ccip@1.6.4':
+    resolution: {integrity: sha512-+kHHZJ4DtSd0mO6EIrPpK9UzEwVhMNR0wzbjuRDcn1UwX4wibnrEbY5RYuGOrTwmXPRoMFsDVeN47O5zgFg5cw==}
+    engines: {node: '>=20', pnpm: '>=10'}
+
   '@chainlink/contracts@1.5.0':
     resolution: {integrity: sha512-1fGJwjvivqAxvVOTqZUEXGR54CATtg0vjcXgSIk4Cfoad2nUhSG/qaWHXjLg1CkNTeOoteoxGQcpP/HiA5HsUA==}
     engines: {node: '>=22', pnpm: '>=10'}
+
+  '@chainlink/local@0.2.3':
+    resolution: {integrity: sha512-NfvXSuLsVXLnqAtV+GxQwSt5fynn9UDZxL2DPSBtBK5mKSVy74gt6FTWZjrnmXO79f2Ebzat+7tP8bPUEYOZQA==}
 
   '@changesets/apply-release-plan@7.0.14':
     resolution: {integrity: sha512-ddBvf9PHdy2YY0OUiEl3TV78mH9sckndJR14QAt87KLEbIov81XO0q0QAmvooBxXlqRRP8I9B7XOzZwQG7JkWA==}
@@ -912,6 +925,10 @@ packages:
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
+
+  dotenv@17.2.4:
+    resolution: {integrity: sha512-mudtfb4zRB4bVvdj0xRo+e6duH1csJRM8IukBqfTRvHotn9+LBXB8ynAidP9zHqoRC/fsllXgk4kCKlR21fIhw==}
+    engines: {node: '>=12'}
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
@@ -1800,6 +1817,22 @@ snapshots:
 
   '@babel/runtime@7.28.6': {}
 
+  '@chainlink/contracts-ccip@1.6.4(@types/node@22.19.10)(ethers@6.16.0)':
+    dependencies:
+      '@chainlink/contracts': 1.5.0(@types/node@22.19.10)(ethers@6.16.0)
+      '@changesets/cli': 2.29.8(@types/node@22.19.10)
+      '@changesets/get-github-info': 0.6.0
+      '@openzeppelin/contracts-4.8.3': '@openzeppelin/contracts@4.8.3'
+      '@openzeppelin/contracts-5.0.2': '@openzeppelin/contracts@5.0.2'
+      semver: 7.7.4
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - encoding
+      - ethers
+      - supports-color
+      - utf-8-validate
+
   '@chainlink/contracts@1.5.0(@types/node@22.19.10)(ethers@6.16.0)':
     dependencies:
       '@arbitrum/nitro-contracts': 3.0.0
@@ -1816,6 +1849,18 @@ snapshots:
       '@scroll-tech/contracts': 2.0.0
       '@zksync/contracts': era-contracts@https://codeload.github.com/matter-labs/era-contracts/tar.gz/446d391d34bdb48255d5f8fef8a8248925fc98b9
       semver: 7.7.4
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - encoding
+      - ethers
+      - supports-color
+      - utf-8-validate
+
+  '@chainlink/local@0.2.3(@types/node@22.19.10)(ethers@6.16.0)':
+    dependencies:
+      '@chainlink/contracts': 1.5.0(@types/node@22.19.10)(ethers@6.16.0)
+      '@chainlink/contracts-ccip': 1.6.4(@types/node@22.19.10)(ethers@6.16.0)
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -2883,6 +2928,8 @@ snapshots:
   dir-glob@3.0.1:
     dependencies:
       path-type: 4.0.0
+
+  dotenv@17.2.4: {}
 
   eastasianwidth@0.2.0: {}
 

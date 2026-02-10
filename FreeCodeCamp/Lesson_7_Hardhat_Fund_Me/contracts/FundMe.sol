@@ -2,6 +2,7 @@
 pragma solidity 0.8.28;
 
 import "./PriceConverter.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 // custom error
 error NotOwner();
@@ -11,12 +12,15 @@ contract FundMe {
 
     uint256 public constant MINIMUM_USD = 50 * 1e18; //$50.000000000000000000, constant membuat gas lebih irit
 
+    AggregatorV3Interface private immutable i_priceFeed; //credential aggregator oracle disimpan di state
+
     address public immutable i_owner; //memakai immutable biar irit GAS
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
 
-    constructor() {
+    constructor(address priceFeedAddress) {
         i_owner = msg.sender;
+        i_priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 
     /*
@@ -24,7 +28,7 @@ contract FundMe {
     */
     function fund() public payable {
         require(
-            msg.value.getConversionRate() >= MINIMUM_USD,
+            msg.value.getConversionRate(i_priceFeed) >= MINIMUM_USD,
             "Didn't send enough!"
         ); // 1e18 == 1*10**18 == 1 ETH
         funders.push(msg.sender);
@@ -81,5 +85,12 @@ contract FundMe {
 
     fallback() external payable {
         fund();
+    }
+
+    /**
+     * testing / debug
+     */
+    function getPriceFeed() external view returns (address) {
+        return address(i_priceFeed);
     }
 }

@@ -9,14 +9,14 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
 */
 library PriceConverter {
     /*
-    - doc = https://docs.chain.link/data-feeds/api-reference
-    - latestRoundData = Get the data from the latest round.
-    - uint256(answer * 1e10) = untuk menyamanakan decimal dari oracel dengan WEI
+        - doc = https://docs.chain.link/data-feeds/api-reference
+        - latestRoundData = Get the data from the latest round.
+        - uint256(answer * 1e10) = untuk menyamanakan decimal dari oracel dengan WEI
+        @notice Mengambil harga ETH/USD dari oracle
     */
-    function getPrice() internal view returns (uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(
-            0x694AA1769357215DE4FAC081bf1f309aDC325306
-        );
+    function getPrice(
+        AggregatorV3Interface priceFeed
+    ) internal view returns (uint256) {
         (, int256 answer, , , ) = priceFeed.latestRoundData(); //terdapat koma-koma karena returnnya hanya membutuhkan answer
         return uint256(answer * 1e10);
     }
@@ -25,10 +25,9 @@ library PriceConverter {
         - getVersion from external library chainlink AggregatorV3Interface
         - Address Sepolia ETH = 0x694AA1769357215DE4FAC081bf1f309aDC325306
     */
-    function getVersion() internal view returns (uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(
-            0x694AA1769357215DE4FAC081bf1f309aDC325306
-        );
+    function getVersion(
+        AggregatorV3Interface priceFeed
+    ) internal view returns (uint256) {
         return priceFeed.version();
     }
 
@@ -37,9 +36,10 @@ library PriceConverter {
         - Pembagian: (2000×1036)/1018=2000×1018.
     */
     function getConversionRate(
-        uint256 ethAmount
+        uint256 ethAmount,
+        AggregatorV3Interface priceFeed
     ) internal view returns (uint256) {
-        uint256 ethPrice = getPrice();
+        uint256 ethPrice = getPrice(priceFeed);
         uint256 ethAmountInUSD = (ethPrice * ethAmount) / 1e18;
         return ethAmountInUSD;
     }
