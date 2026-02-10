@@ -4,40 +4,58 @@ pragma solidity 0.8.28;
 import "./PriceConverter.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
-// custom error
-error NotOwner();
+error FundMe_NotOwner();
 
+/**
+ * @title A Simple Contract for Funding
+ * @author Rizky Cahyono Putra, https://github.com/rizkycahyono97
+ * @notice This contract is to demo a sample funding contract
+ * @dev this using Chainlink price feed for price converter USD to ETH
+ */
 contract FundMe {
+    // Type Declarations
     using PriceConverter for uint256;
 
-    uint256 public constant MINIMUM_USD = 50 * 1e18; //$50.000000000000000000, constant membuat gas lebih irit
+    /// @notice jumlah minimum donasi dalam USD (dengan angka desimal)
+    uint256 public constant MINIMUM_USD = 50 * 1e18;
 
-    AggregatorV3Interface private immutable i_priceFeed; //credential aggregator oracle disimpan di state
+    /// @dev Alamat interface aggregator harga Chainlink
+    AggregatorV3Interface private immutable i_priceFeed;
 
-    address public immutable i_owner; //memakai immutable biar irit GAS
+    /// @notice alamat pemilik kontrak yang memiliki hak akses owner
+    address public immutable i_owner;
+
+    /// @notice alamat para funders
     address[] public funders;
+
+    /// @notice mapping dari alamat donatur ke jumlah saldo yang didonasikan
     mapping(address => uint256) public addressToAmountFunded;
 
+    /**
+     * @param priceFeedAddress alamat aggregator dari chainlink, https://docs.chain.link/data-feeds/price-feeds/addresses?network=ethereum&networkType=testnet
+     */
     constructor(address priceFeedAddress) {
         i_owner = msg.sender;
         i_priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 
-    /*
-        - function untuk mengirim uang ke smar tcontract
-    */
+    /**
+     * @notice fungsi untuk mengirimkan donasi ke dalam kontrak
+     * @dev getConversionRate = konversi dari dolar ke gwei ETH
+     */
     function fund() public payable {
         require(
             msg.value.getConversionRate(i_priceFeed) >= MINIMUM_USD,
             "Didn't send enough!"
-        ); // 1e18 == 1*10**18 == 1 ETH
+        );
         funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] += msg.value; //ditambah terus di addressToAmountFunded
+        addressToAmountFunded[msg.sender] += msg.value;
     }
 
-    /*
-        - function untuk mereset funders dan mengirimnya ke address kita
-    */
+    /**
+     * @notice fungsi untuk menarik seluruh saldo dari kontrak
+     * @dev hanya owner. Dan reset saldo di array funders
+     */
     function withdraw() public onlyOwner {
         for (
             uint256 funderIndex = 0;
@@ -45,50 +63,41 @@ contract FundMe {
             funderIndex++
         ) {
             address funder = funders[funderIndex];
-            addressToAmountFunded[funder] = 0; //reset money
+            addressToAmountFunded[funder] = 0;
         }
-        funders = new address[](0); //reset array
+        funders = new address[](0);
 
-        //transfer ke address kita
         (bool callSuccess, ) = payable(msg.sender).call{
             value: address(this).balance
         }("");
         require(callSuccess, "Call not success");
     }
 
-    /*
-        - modifier untuk hanya owner
-    */
+    /**
+     * @dev modifier untuk membatasi akses fungsi ke pemilik kontrak
+     */
     modifier onlyOwner() {
-        if (msg.sender != i_owner) revert NotOwner(); //custom error
-        _; //jika semua true diatas, maka baru jalankan fungsi bawahnya
+        if (msg.sender != i_owner) revert FundMe_NotOwner();
+        _;
     }
 
-    /*
-        FALLBACK AND RECEIVE
-
-        Explainer from: https://solidity-by-example.org/fallback/
-        Ether is sent to contract
-            is msg.data empty?
-                /   \ 
-                yes  no
-                /     \
-        receive()?  fallback() 
-            /   \ 
-        yes   no
-        /        \
-        receive()  fallback()
-    */
+    /**
+     * @dev Fungsi khusus jika seseorang mengirim ETH tanpa memanggil fungsi fund()
+     */
     receive() external payable {
         fund();
     }
 
+    /**
+     * @notice Fungsi cadangan jika data yang dikirim tidak cocok dengan fungsi manapun
+     */
     fallback() external payable {
         fund();
     }
 
     /**
-     * testing / debug
+     * @notice Mengambil alamat price feed yang sedang digunakan
+     * @return Alamat dari AggregatorV3Interface
      */
     function getPriceFeed() external view returns (address) {
         return address(i_priceFeed);
