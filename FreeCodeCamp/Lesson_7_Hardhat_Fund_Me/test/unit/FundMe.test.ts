@@ -54,47 +54,49 @@ describe('FundMe', function () {
 
       await expect(fundMe.fund()).to.be.revertedWith("Didn't send enough!");
     });
-  });
 
-  it('updates the amount funded mapping', async function () {
-    const { fundMe, deployer } =
-      await networkHelpers.loadFixture(deployFundMeFixture);
+    it('updates the amount funded mapping', async function () {
+      const { fundMe, deployer } =
+        await networkHelpers.loadFixture(deployFundMeFixture);
 
-    const sendValue = ethers.parseEther('1');
+      const sendValue = ethers.parseEther('1');
 
-    await fundMe.fund({ value: sendValue });
+      await fundMe.fund({ value: sendValue });
 
-    const amountFunded = await fundMe.addressToAmountFunded(deployer.address);
+      const amountFunded = await fundMe.addressToAmountFunded(deployer.address);
 
-    expect(amountFunded).to.be.equal(sendValue);
-  });
-
-  it('adds funder to funders array', async function () {
-    const { fundMe, deployer } =
-      await networkHelpers.loadFixture(deployFundMeFixture);
-
-    const sendValue = ethers.parseEther('1');
-
-    await fundMe.fund({ value: sendValue });
-
-    const funder = await fundMe.funders(0);
-
-    expect(funder).to.equal(deployer.address);
-  });
-
-  it('allows funding via receive()', async function () {
-    const { fundMe, deployer } =
-      await networkHelpers.loadFixture(deployFundMeFixture);
-
-    const sendValue = ethers.parseEther('1');
-
-    await deployer.sendTransaction({
-      to: fundMe.getAddress(),
-      value: sendValue
+      expect(amountFunded).to.be.equal(sendValue);
     });
 
-    const amountFunded = await fundMe.addressToAmountFunded(deployer.address);
+    it('adds funder to funders array', async function () {
+      const { fundMe, deployer } =
+        await networkHelpers.loadFixture(deployFundMeFixture);
 
-    expect(amountFunded).to.equal(sendValue);
+      const sendValue = ethers.parseEther('1');
+
+      await fundMe.fund({ value: sendValue });
+
+      const funder = await fundMe.funders(0);
+
+      expect(funder).to.equal(deployer.address);
+    });
+
+    it('allows funding via receive()', async function () {
+      const { fundMe, deployer } =
+        await networkHelpers.loadFixture(deployFundMeFixture);
+
+      const sendValue = ethers.parseEther('1');
+
+      await deployer.sendTransaction({
+        to: fundMe.getAddress(),
+        value: sendValue
+      });
+
+      const amountFunded = await fundMe.addressToAmountFunded(deployer.address);
+
+      expect(amountFunded).to.equal(sendValue);
+    });
   });
+
+  describe('Withdraw', function () {});
 });
