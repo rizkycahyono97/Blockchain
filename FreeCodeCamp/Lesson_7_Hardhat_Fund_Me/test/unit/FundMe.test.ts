@@ -1,34 +1,58 @@
+import { expect } from 'chai';
 import { network } from 'hardhat';
-import { assert } from 'chai';
 
-let publicClient: any;
-let deployer: any;
-let otherAccount: any;
-let fundMe: any;
-let mockV3AggregatorFactory: any;
+const { ethers, networkHelpers } = await network.connect();
 
-describe('FundMe', async function () {
-  beforeEach(async function () {
-    const { viem } = await network.connect();
-    publicClient = await viem.getPublicClient();
+describe('FundMe', function () {
+  async function deployFundMeFixture() {
+    const [deployer] = await ethers.getSigners();
 
-    const walletClients = await viem.getWalletClients();
-    deployer = walletClients[0];
-    otherAccount = walletClients[1];
+    const DECIMALS = 8;
+    const INITIAL_PRICE = 2000n * 10n ** 8n;
 
-    const mockV3AggregatorFactory = await viem.deployContract(
-      'MockV3Aggregator',
-      [8, 2000_00000000n]
-    );
-
-    fundMe = await viem.deployContract('Fundme', [
-      mockV3AggregatorFactory.address
+    const mock = await ethers.deployContract('MockV3AggregatorTest', [
+      DECIMALS,
+      INITIAL_PRICE
     ]);
-    console.log('Deployed FundMe contract to: ', fundMe.target);
+
+    await mock.waitForDeployment();
+    const mockAddress = await mock.getAddress();
+
+    const fundMe = await ethers.deployContract('FundMe', [mockAddress]);
+
+    await fundMe.waitForDeployment();
+
+    return { fundMe, mockAddress, deployer };
+  }
+
+  describe('constructor', function () {
+    it('sets the price feed address correctly', async function () {
+      const { fundMe, mockAddress } =
+        await networkHelpers.loadFixture(deployFundMeFixture);
+
+      const storedPriceFeed = await fundMe.getPriceFeed();
+
+      console.log('storedPriceFeed', storedPriceFeed);
+      console.log('mockAddress: ', mockAddress);
+
+      expect(storedPriceFeed).to.equal(mockAddress);
+    });
+
+    it('sets the deployer as the owner', async function () {
+      const { fundMe, deployer } =
+        await networkHelpers.loadFixture(deployFundMeFixture);
+
+      const owner = await fundMe.i_owner();
+
+      expect(owner).to.equal(deployer.address);
+    });
   });
 
-  it('Should set the aggregator addresses correctly', async function () {
-    const response = await fundMe.getPriceFeed();
-    assert.equal(response, mockV3AggregatorFactory.address);
+  describe('Fund', function () {
+    it('reverts if not enough ETH is sent', async function () {
+      const { fundMe } = await networkHelpers.loadFixture(deployFundMeFixture);
+
+      await expect(fundMe.fund()).to.be.revertedWith("Didn't send enough!");
+    });
   });
 });
