@@ -42,7 +42,7 @@ describe('FundMe', function () {
       const { fundMe, deployer } =
         await networkHelpers.loadFixture(deployFundMeFixture);
 
-      const owner = await fundMe.i_owner();
+      const owner = await fundMe.getOwner();
 
       expect(owner).to.equal(deployer.address);
     });
@@ -78,7 +78,7 @@ describe('FundMe', function () {
 
       await fundMe.fund({ value: sendValue });
 
-      const funder = await fundMe.s_funders(0);
+      const funder = await fundMe.getFunder(0);
 
       expect(funder).to.equal(deployer.address);
     });
@@ -183,7 +183,7 @@ describe('FundMe', function () {
         expect(funded).to.equal(0n);
       }
 
-      await expect(fundMe.s_funders(0)).to.be.revert(ethers);
+      await expect(fundMe.getFunder(0)).to.be.revert(ethers);
     });
   });
 

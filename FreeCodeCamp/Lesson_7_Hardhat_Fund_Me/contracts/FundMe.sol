@@ -23,10 +23,10 @@ contract FundMe {
     AggregatorV3Interface private immutable i_priceFeed;
 
     /// @notice alamat pemilik kontrak yang memiliki hak akses owner
-    address public immutable i_owner;
+    address private immutable i_owner;
 
     /// @notice alamat para funders
-    address[] public s_funders;
+    address[] private s_funders;
 
     /// @notice mapping dari alamat donatur ke jumlah saldo yang didonasikan
     mapping(address => uint256) public s_addressToAmountFunded;
@@ -80,15 +80,12 @@ contract FundMe {
     function cheaperWithdraw() public onlyOwner {
         address[] memory funders = s_funders;
 
-        for (
-            uint256 funderIndex = 0;
-            funderIndex < funders.length;
-            funderIndex++
-        ) {
-            address funder = funders[funderIndex];
+        for (uint256 i = 0; i < funders.length; i++) {
+            address funder = funders[i];
             s_addressToAmountFunded[funder] = 0;
         }
-        funders = new address[](0);
+
+        s_funders = new address[](0);
 
         (bool callSuccess, ) = payable(msg.sender).call{
             value: address(this).balance
@@ -124,5 +121,21 @@ contract FundMe {
      */
     function getPriceFeed() external view returns (address) {
         return address(i_priceFeed);
+    }
+
+    /**
+     * @notice getter untuk i_owner
+     * @return address i_owner
+     */
+    function getOwner() public view returns (address) {
+        return i_owner;
+    }
+
+    /**
+     * @notice getter untuk s_funders[index]
+     * @return address s_funders
+     */
+    function getFunder(uint256 index) public view returns (address) {
+        return s_funders[index];
     }
 }
