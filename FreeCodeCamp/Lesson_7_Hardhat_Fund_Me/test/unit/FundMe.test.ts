@@ -178,6 +178,8 @@ describe('FundMe', function () {
         const funded = await fundMe.addressToAmountFunded(account[i].address);
         expect(funded).to.equal(0n);
       }
+
+      await expect(fundMe.funders(0)).to.be.revert(ethers);
     });
   });
 });
