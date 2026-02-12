@@ -22,5 +22,18 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^1.5.0"
+  },
+  "scripts": {
+    "node": "hardhat node",
+    "compile": "hardhat compile",
+    "deploy:local": "hardhat ignition deploy ./ignition/modules/FundMeLocal.ts --network localhost",
+    "deploy:sepolia": "hardhat ignition deploy ./ignition/modules/FundMeSepolia.ts --network sepolia",
+    "fund:local": "hardhat run scripts/fund.ts --network localhost",
+    "fund:sepolia": "hardhat run scripts/fund.ts --network sepolia",
+    "withdraw:local": "hardhat run scripts/withdraw.ts --network localhost",
+    "withdraw:sepolia": "hardhat run scripts/withdraw.ts --network sepolia",
+    "test:local": "hardhat test",
+    "test:sepolia": "hardhat test --network sepolia",
+    "clean": "hardhat clean"
   }
 }
