@@ -32,8 +32,8 @@ describe('FundMe', function () {
 
       const storedPriceFeed = await fundMe.getPriceFeed();
 
-      console.log('storedPriceFeed', storedPriceFeed);
-      console.log('mockAddress: ', mockAddress);
+      // console.log('storedPriceFeed', storedPriceFeed);
+      // console.log('mockAddress: ', mockAddress);
 
       expect(storedPriceFeed).to.equal(mockAddress);
     });
@@ -98,5 +98,86 @@ describe('FundMe', function () {
     });
   });
 
-  describe('Withdraw', function () {});
+  describe('Withdraw', function () {
+    it('only allows the owner to withdraw', async function () {
+      const { fundMe } = await networkHelpers.loadFixture(deployFundMeFixture);
+
+      const account = await ethers.getSigners();
+      const attacker = account[1];
+
+      await expect(
+        fundMe.connect(attacker).withdraw()
+      ).to.be.revertedWithCustomError(fundMe, 'FundMe_NotOwner');
+    });
+
+    it('withdraws ETH from a single funder', async function () {
+      const { fundMe, deployer } =
+        await networkHelpers.loadFixture(deployFundMeFixture);
+
+      const sendValue = ethers.parseEther('1');
+
+      await fundMe.fund({ value: sendValue });
+
+      const startingOwnerBalance = await ethers.provider.getBalance(
+        await deployer.getAddress()
+      );
+
+      const startingContractBalance = await ethers.provider.getBalance(
+        await fundMe.getAddress()
+      );
+
+      // withdraw
+      const txResponse = await fundMe.withdraw();
+      const txReceipt = await txResponse.wait();
+
+      const gasUsed = txReceipt!.gasUsed;
+      const gasPrice = txReceipt!.gasPrice;
+      const gasCost = gasUsed * gasPrice;
+
+      const endingOwnerBalance = await ethers.provider.getBalance(
+        deployer.getAddress()
+      );
+
+      const endingContractBalance = await ethers.provider.getBalance(
+        await fundMe.getAddress()
+      );
+
+      //contract balance harus 0
+      expect(endingContractBalance).to.equal(0n);
+
+      expect(endingOwnerBalance).to.equal(
+        startingOwnerBalance + startingContractBalance - gasCost
+      );
+    });
+
+    it('withdraws ETH with multiple funders', async function () {
+      const { fundMe, deployer } =
+        await networkHelpers.loadFixture(deployFundMeFixture);
+
+      const account = await ethers.getSigners();
+
+      const sendValue = ethers.parseEther('1');
+
+      for (let i = 1; i < 4; i++) {
+        await fundMe.connect(account[i]).fund({ value: sendValue });
+      }
+
+      const startingContractBalance = await ethers.provider.getBalance(
+        await fundMe.getAddress()
+      );
+
+      await fundMe.withdraw();
+
+      const endingContractBalance = await ethers.provider.getBalance(
+        await fundMe.getAddress()
+      );
+
+      expect(endingContractBalance).to.equal(0n);
+
+      for (let i = 1; i < 4; i++) {
+        const funded = await fundMe.addressToAmountFunded(account[i].address);
+        expect(funded).to.equal(0n);
+      }
+    });
+  });
 });
