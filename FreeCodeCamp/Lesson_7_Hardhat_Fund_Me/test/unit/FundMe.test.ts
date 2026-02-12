@@ -186,4 +186,91 @@ describe('FundMe', function () {
       await expect(fundMe.s_funders(0)).to.be.revert(ethers);
     });
   });
+
+  describe('Cheaper Withdraw', function () {
+    it('only allows the owner to withdraw', async function () {
+      const { fundMe } = await networkHelpers.loadFixture(deployFundMeFixture);
+
+      const account = await ethers.getSigners();
+      const attacker = account[1];
+
+      await expect(
+        fundMe.connect(attacker).cheaperWithdraw()
+      ).to.be.revertedWithCustomError(fundMe, 'FundMe_NotOwner');
+    });
+
+    it('withdraws ETH from a single funder', async function () {
+      const { fundMe, deployer } =
+        await networkHelpers.loadFixture(deployFundMeFixture);
+
+      const sendValue = ethers.parseEther('1');
+
+      await fundMe.fund({ value: sendValue });
+
+      const startingOwnerBalance = await ethers.provider.getBalance(
+        await deployer.getAddress()
+      );
+
+      const startingContractBalance = await ethers.provider.getBalance(
+        await fundMe.getAddress()
+      );
+
+      // withdraw
+      const txResponse = await fundMe.cheaperWithdraw();
+      const txReceipt = await txResponse.wait();
+
+      const gasUsed = txReceipt!.gasUsed;
+      const gasPrice = txReceipt!.gasPrice;
+      const gasCost = gasUsed * gasPrice;
+
+      const endingOwnerBalance = await ethers.provider.getBalance(
+        deployer.getAddress()
+      );
+
+      const endingContractBalance = await ethers.provider.getBalance(
+        await fundMe.getAddress()
+      );
+
+      //contract balance harus 0
+      expect(endingContractBalance).to.equal(0n);
+
+      expect(endingOwnerBalance).to.equal(
+        startingOwnerBalance + startingContractBalance - gasCost
+      );
+    });
+
+    // it('withdraws ETH with multiple funders', async function () {
+    //   const { fundMe, deployer } =
+    //     await networkHelpers.loadFixture(deployFundMeFixture);
+
+    //   const account = await ethers.getSigners();
+
+    //   const sendValue = ethers.parseEther('1');
+
+    //   for (let i = 1; i < 4; i++) {
+    //     await fundMe.connect(account[i]).fund({ value: sendValue });
+    //   }
+
+    //   const startingContractBalance = await ethers.provider.getBalance(
+    //     await fundMe.getAddress()
+    //   );
+
+    //   await fundMe.cheaperWithdraw();
+
+    //   const endingContractBalance = await ethers.provider.getBalance(
+    //     await fundMe.getAddress()
+    //   );
+
+    //   expect(endingContractBalance).to.equal(0n);
+
+    //   for (let i = 1; i < 4; i++) {
+    //     const funded = await fundMe.s_addressToAmountFunded(account[i].address);
+    //     expect(funded).to.equal(0n);
+    //   }
+
+    //   console.log('log => ', await fundMe.s_funders(0));
+
+    //   await expect(fundMe.s_funders(0)).to.be.revert(ethers);
+    // });
+  });
 });

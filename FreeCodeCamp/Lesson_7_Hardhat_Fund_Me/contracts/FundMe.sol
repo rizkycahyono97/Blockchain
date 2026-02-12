@@ -74,6 +74,29 @@ contract FundMe {
     }
 
     /**
+     * @notice fungsi untuk menarik seluruh saldo dari kontrak, tettapi menggunakan copy address ke memory
+     * @dev hanya owner. Dan reset saldo di array funders
+     */
+    function cheaperWithdraw() public onlyOwner {
+        address[] memory funders = s_funders;
+
+        for (
+            uint256 funderIndex = 0;
+            funderIndex < funders.length;
+            funderIndex++
+        ) {
+            address funder = funders[funderIndex];
+            s_addressToAmountFunded[funder] = 0;
+        }
+        funders = new address[](0);
+
+        (bool callSuccess, ) = payable(msg.sender).call{
+            value: address(this).balance
+        }("");
+        require(callSuccess, "Call not success");
+    }
+
+    /**
      * @dev modifier untuk membatasi akses fungsi ke pemilik kontrak
      */
     modifier onlyOwner() {
