@@ -63,7 +63,9 @@ describe('FundMe', function () {
 
       await fundMe.fund({ value: sendValue });
 
-      const amountFunded = await fundMe.addressToAmountFunded(deployer.address);
+      const amountFunded = await fundMe.s_addressToAmountFunded(
+        deployer.address
+      );
 
       expect(amountFunded).to.be.equal(sendValue);
     });
@@ -76,7 +78,7 @@ describe('FundMe', function () {
 
       await fundMe.fund({ value: sendValue });
 
-      const funder = await fundMe.funders(0);
+      const funder = await fundMe.s_funders(0);
 
       expect(funder).to.equal(deployer.address);
     });
@@ -92,7 +94,9 @@ describe('FundMe', function () {
         value: sendValue
       });
 
-      const amountFunded = await fundMe.addressToAmountFunded(deployer.address);
+      const amountFunded = await fundMe.s_addressToAmountFunded(
+        deployer.address
+      );
 
       expect(amountFunded).to.equal(sendValue);
     });
@@ -175,11 +179,11 @@ describe('FundMe', function () {
       expect(endingContractBalance).to.equal(0n);
 
       for (let i = 1; i < 4; i++) {
-        const funded = await fundMe.addressToAmountFunded(account[i].address);
+        const funded = await fundMe.s_addressToAmountFunded(account[i].address);
         expect(funded).to.equal(0n);
       }
 
-      await expect(fundMe.funders(0)).to.be.revert(ethers);
+      await expect(fundMe.s_funders(0)).to.be.revert(ethers);
     });
   });
 });

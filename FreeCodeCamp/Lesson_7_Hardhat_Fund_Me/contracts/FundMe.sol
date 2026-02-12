@@ -26,10 +26,10 @@ contract FundMe {
     address public immutable i_owner;
 
     /// @notice alamat para funders
-    address[] public funders;
+    address[] public s_funders;
 
     /// @notice mapping dari alamat donatur ke jumlah saldo yang didonasikan
-    mapping(address => uint256) public addressToAmountFunded;
+    mapping(address => uint256) public s_addressToAmountFunded;
 
     /**
      * @param priceFeedAddress alamat aggregator dari chainlink, https://docs.chain.link/data-feeds/price-feeds/addresses?network=ethereum&networkType=testnet
@@ -48,8 +48,8 @@ contract FundMe {
             msg.value.getConversionRate(i_priceFeed) >= MINIMUM_USD,
             "Didn't send enough!"
         );
-        funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] += msg.value;
+        s_funders.push(msg.sender);
+        s_addressToAmountFunded[msg.sender] += msg.value;
     }
 
     /**
@@ -59,13 +59,13 @@ contract FundMe {
     function withdraw() public onlyOwner {
         for (
             uint256 funderIndex = 0;
-            funderIndex < funders.length;
+            funderIndex < s_funders.length;
             funderIndex++
         ) {
-            address funder = funders[funderIndex];
-            addressToAmountFunded[funder] = 0;
+            address funder = s_funders[funderIndex];
+            s_addressToAmountFunded[funder] = 0;
         }
-        funders = new address[](0);
+        s_funders = new address[](0);
 
         (bool callSuccess, ) = payable(msg.sender).call{
             value: address(this).balance
