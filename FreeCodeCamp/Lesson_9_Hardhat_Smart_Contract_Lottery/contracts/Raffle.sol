@@ -18,21 +18,54 @@ contract Raffle is VRFConsumerBaseV2Plus {
     // state variabel
     uint256 private immutable i_entranceFee;
     address payable[] private s_players;
+    bytes32 private immutable i_keyhash;
+    uint256 private immutable i_subscriptionId;
+    uint16 private immutable i_requestConfirmations;
+    uint32 private immutable i_callbackGasLimit;
+    uint32 private constant NUMWORDS = 1;
 
     //event
     event RaffleEnter(address indexed player);
+    event RequestSent(uint256 requestId);
 
     constructor(
         address vRFConsumerBaseV2Plus,
-        uint256 entranceFee
+        uint256 entranceFee,
+        bytes32 keyhash,
+        uint256 subscriptionId,
+        uint16 requestConfirmations,
+        uint32 callbackGasLimit
     ) VRFConsumerBaseV2Plus(vRFConsumerBaseV2Plus) {
         i_entranceFee = entranceFee;
+        i_keyhash = keyhash;
+        i_subscriptionId = subscriptionId;
+        i_requestConfirmations = requestConfirmations;
+        i_callbackGasLimit = callbackGasLimit;
     }
 
     function enterRaffle() public payable {
         if (msg.value < i_entranceFee) revert Raffle__notEnoughETHEntered();
         s_players.push(payable(msg.sender));
         emit RaffleEnter(msg.sender);
+    }
+
+    function requestRandomWords(bool enableNativePayment) external {
+        uint256 requestId = s_vrfCoordinator.requestRandomWords(
+            VRFV2PlusClient.RandomWordsRequest({
+                keyHash: i_keyhash,
+                subId: i_subscriptionId,
+                requestConfirmations: i_requestConfirmations,
+                callbackGasLimit: i_callbackGasLimit,
+                numWords: NUMWORDS,
+                extraArgs: VRFV2PlusClient._argsToBytes(
+                    VRFV2PlusClient.ExtraArgsV1({
+                        nativePayment: enableNativePayment
+                    })
+                )
+            })
+        );
+
+        emit RequestSent(requestId);
     }
 
     function fulfillRandomWords(
