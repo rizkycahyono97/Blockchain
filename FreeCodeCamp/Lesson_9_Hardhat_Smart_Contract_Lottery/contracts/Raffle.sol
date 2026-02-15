@@ -16,6 +16,11 @@ import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/autom
 error Raffle__notEnoughETHEntered();
 error Raffle__TransferFailed();
 error Raffle__RaffleNotOpen();
+error Raffle__UpkeepNotNeeded(
+    uint256 currentBalance,
+    uint256 numPlayers,
+    uint256 raffleState
+);
 
 contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     // types declaration
@@ -38,6 +43,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     RaffleState private s_raffleState;
     uint256 private s_lastTimeStamp;
     uint256 private immutable i_interval;
+    bool private immutable i_enableNativePayment;
 
     //event
     event RaffleEnter(address indexed player);
@@ -51,7 +57,8 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         uint256 subscriptionId,
         uint16 requestConfirmations,
         uint32 callbackGasLimit,
-        uint256 interval
+        uint256 interval,
+        bool enableNativePayment
     ) VRFConsumerBaseV2Plus(vRFConsumerBaseV2Plus) {
         i_entranceFee = entranceFee;
         i_keyhash = keyhash;
@@ -61,6 +68,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         s_raffleState = RaffleState.OPEN;
         s_lastTimeStamp = block.timestamp;
         i_interval = interval;
+        i_enableNativePayment = enableNativePayment;
     }
 
     function enterRaffle() public payable {
@@ -73,7 +81,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     function checkUpkeep(
         bytes calldata /* checkData */
     )
-        external
+        public
         view
         override
         returns (bool upKeepNeeded, bytes memory /* performData */)
@@ -87,7 +95,34 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         return (upKeepNeeded, "0x0");
     }
 
-    function performUpkeep(bytes calldata performData) external override {}
+    function performUpkeep(bytes calldata /* performData */) external override {
+        (bool upKeepNeeded, ) = this.checkUpkeep("");
+        if (!upKeepNeeded)
+            revert Raffle__UpkeepNotNeeded(
+                address(this).balance,
+                s_players.length,
+                uint256(s_raffleState)
+            );
+
+        s_raffleState = RaffleState.CALCULATING;
+
+        uint256 requestId = s_vrfCoordinator.requestRandomWords(
+            VRFV2PlusClient.RandomWordsRequest({
+                keyHash: i_keyhash,
+                subId: i_subscriptionId,
+                requestConfirmations: i_requestConfirmations,
+                callbackGasLimit: i_callbackGasLimit,
+                numWords: NUMWORDS,
+                extraArgs: VRFV2PlusClient._argsToBytes(
+                    VRFV2PlusClient.ExtraArgsV1({
+                        nativePayment: i_enableNativePayment
+                    })
+                )
+            })
+        );
+
+        emit RequestSent(requestId);
+    }
 
     function fulfillRandomWords(
         uint256 /* requestId */,
@@ -105,27 +140,6 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         }
 
         emit PickedWinner(recentWinner);
-    }
-
-    function requestRandomWinner(bool enableNativePayment) external {
-        s_raffleState = RaffleState.CALCULATING;
-
-        uint256 requestId = s_vrfCoordinator.requestRandomWords(
-            VRFV2PlusClient.RandomWordsRequest({
-                keyHash: i_keyhash,
-                subId: i_subscriptionId,
-                requestConfirmations: i_requestConfirmations,
-                callbackGasLimit: i_callbackGasLimit,
-                numWords: NUMWORDS,
-                extraArgs: VRFV2PlusClient._argsToBytes(
-                    VRFV2PlusClient.ExtraArgsV1({
-                        nativePayment: enableNativePayment
-                    })
-                )
-            })
-        );
-
-        emit RequestSent(requestId);
     }
 
     /**
