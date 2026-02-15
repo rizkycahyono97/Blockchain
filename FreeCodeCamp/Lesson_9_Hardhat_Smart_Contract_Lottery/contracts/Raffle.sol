@@ -13,6 +13,7 @@ import {VRFConsumerBaseV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/VRFCo
 import {VRFV2PlusClient} from "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
 
 error Raffle__notEnoughETHEntered();
+error Raffle__TransferFailed();
 
 contract Raffle is VRFConsumerBaseV2Plus {
     // state variabel
@@ -23,10 +24,12 @@ contract Raffle is VRFConsumerBaseV2Plus {
     uint16 private immutable i_requestConfirmations;
     uint32 private immutable i_callbackGasLimit;
     uint32 private constant NUMWORDS = 1;
+    address private s_recentWinner;
 
     //event
     event RaffleEnter(address indexed player);
     event RequestSent(uint256 requestId);
+    event PickedWinner(address recentWinner);
 
     constructor(
         address vRFConsumerBaseV2Plus,
@@ -69,9 +72,21 @@ contract Raffle is VRFConsumerBaseV2Plus {
     }
 
     function fulfillRandomWords(
-        uint256 _requestId,
+        uint256,
         uint256[] calldata _randomWords
-    ) internal override {}
+    ) internal override {
+        uint256 indexOfWinner = _randomWords[0] % s_players.length;
+        address payable recentWinner = s_players[indexOfWinner];
+        s_recentWinner = recentWinner;
+        s_players = new address payable[](0); //reset
+
+        (bool success, ) = recentWinner.call{value: address(this).balance}("");
+        if (!success) {
+            revert Raffle__TransferFailed();
+        }
+
+        emit PickedWinner(recentWinner);
+    }
 
     /**
      * @notice getter for i_entranceFee
