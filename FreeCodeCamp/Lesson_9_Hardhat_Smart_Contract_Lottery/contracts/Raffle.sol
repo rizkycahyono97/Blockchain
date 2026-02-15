@@ -11,11 +11,20 @@ pragma solidity 0.8.28;
 
 import {VRFConsumerBaseV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
 import {VRFV2PlusClient} from "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
+import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
 
 error Raffle__notEnoughETHEntered();
 error Raffle__TransferFailed();
+error Raffle__RaffleNotOpen();
 
-contract Raffle is VRFConsumerBaseV2Plus {
+contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
+    // types declaration
+    enum RaffleState {
+        OPEN,
+        CLOSED,
+        CALCULATING
+    }
+
     // state variabel
     uint256 private immutable i_entranceFee;
     address payable[] private s_players;
@@ -24,7 +33,10 @@ contract Raffle is VRFConsumerBaseV2Plus {
     uint16 private immutable i_requestConfirmations;
     uint32 private immutable i_callbackGasLimit;
     uint32 private constant NUMWORDS = 1;
+
+    // lottery variable
     address private s_recentWinner;
+    RaffleState private s_raffleState;
 
     //event
     event RaffleEnter(address indexed player);
@@ -44,15 +56,48 @@ contract Raffle is VRFConsumerBaseV2Plus {
         i_subscriptionId = subscriptionId;
         i_requestConfirmations = requestConfirmations;
         i_callbackGasLimit = callbackGasLimit;
+        s_raffleState = RaffleState.OPEN;
     }
 
     function enterRaffle() public payable {
         if (msg.value < i_entranceFee) revert Raffle__notEnoughETHEntered();
+        if (s_raffleState !== RaffleState.OPEN) revert Raffle__RaffleNotOpen();
         s_players.push(payable(msg.sender));
         emit RaffleEnter(msg.sender);
     }
 
-    function requestRandomWords(bool enableNativePayment) external {
+    function checkUpkeep(
+        bytes calldata /* checkData */
+    )
+        external
+        view
+        override
+        returns (bool upKeepNeeded, bytes memory performData)
+    {}
+
+    function performUpkeep(bytes calldata performData) external override {}
+
+    function fulfillRandomWords(
+        uint256 /* requestId */,
+        uint256[] calldata _randomWords
+    ) internal override {
+        uint256 indexOfWinner = _randomWords[0] % s_players.length;
+        address payable recentWinner = s_players[indexOfWinner];
+        s_recentWinner = recentWinner;
+        s_players = new address payable[](0); //reset
+        s_raffleState = RaffleState.OPEN;   //state kembali open
+
+        (bool success, ) = recentWinner.call{value: address(this).balance}("");
+        if (!success) {
+            revert Raffle__TransferFailed();
+        }
+
+        emit PickedWinner(recentWinner);
+    }
+
+    function requestRandomWinner(bool enableNativePayment) external {
+        s_raffleState = RaffleState.CALCULATING;  
+
         uint256 requestId = s_vrfCoordinator.requestRandomWords(
             VRFV2PlusClient.RandomWordsRequest({
                 keyHash: i_keyhash,
@@ -71,22 +116,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         emit RequestSent(requestId);
     }
 
-    function fulfillRandomWords(
-        uint256,
-        uint256[] calldata _randomWords
-    ) internal override {
-        uint256 indexOfWinner = _randomWords[0] % s_players.length;
-        address payable recentWinner = s_players[indexOfWinner];
-        s_recentWinner = recentWinner;
-        s_players = new address payable[](0); //reset
-
-        (bool success, ) = recentWinner.call{value: address(this).balance}("");
-        if (!success) {
-            revert Raffle__TransferFailed();
-        }
-
-        emit PickedWinner(recentWinner);
-    }
+    
 
     /**
      * @notice getter for i_entranceFee
