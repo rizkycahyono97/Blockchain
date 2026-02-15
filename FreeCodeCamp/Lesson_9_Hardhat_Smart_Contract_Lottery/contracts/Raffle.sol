@@ -34,8 +34,8 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     address payable[] private s_players;
     bytes32 private immutable i_keyhash;
     uint256 private immutable i_subscriptionId;
-    uint16 private immutable i_requestConfirmations;
     uint32 private immutable i_callbackGasLimit;
+    uint16 private constant REQUEST_CONFIRMATION = 3;
     uint32 private constant NUMWORDS = 1;
 
     // lottery variable
@@ -55,7 +55,6 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         uint256 entranceFee,
         bytes32 keyhash,
         uint256 subscriptionId,
-        uint16 requestConfirmations,
         uint32 callbackGasLimit,
         uint256 interval,
         bool enableNativePayment
@@ -63,7 +62,6 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         i_entranceFee = entranceFee;
         i_keyhash = keyhash;
         i_subscriptionId = subscriptionId;
-        i_requestConfirmations = requestConfirmations;
         i_callbackGasLimit = callbackGasLimit;
         s_raffleState = RaffleState.OPEN;
         s_lastTimeStamp = block.timestamp;
@@ -110,7 +108,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
             VRFV2PlusClient.RandomWordsRequest({
                 keyHash: i_keyhash,
                 subId: i_subscriptionId,
-                requestConfirmations: i_requestConfirmations,
+                requestConfirmations: REQUEST_CONFIRMATION,
                 callbackGasLimit: i_callbackGasLimit,
                 numWords: NUMWORDS,
                 extraArgs: VRFV2PlusClient._argsToBytes(
@@ -157,7 +155,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         return i_interval;
     }
 
-    function getLastTimeStamp() public view returns (uint256) {
+    function getLastestTimeStamp() public view returns (uint256) {
         return s_lastTimeStamp;
     }
 
@@ -171,5 +169,13 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
 
     function getNumWords() public pure returns (uint32) {
         return NUMWORDS;
+    }
+
+    function getNumberOfPlayer() public view returns (uint256) {
+        return s_players.length;
+    }
+
+    function getRequestInformations() public pure returns (uint16) {
+        return REQUEST_CONFIRMATION;
     }
 }
