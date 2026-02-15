@@ -21,7 +21,6 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     // types declaration
     enum RaffleState {
         OPEN,
-        CLOSED,
         CALCULATING
     }
 
@@ -37,6 +36,8 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     // lottery variable
     address private s_recentWinner;
     RaffleState private s_raffleState;
+    uint256 private s_lastTimeStamp;
+    uint256 private immutable i_interval;
 
     //event
     event RaffleEnter(address indexed player);
@@ -49,7 +50,8 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         bytes32 keyhash,
         uint256 subscriptionId,
         uint16 requestConfirmations,
-        uint32 callbackGasLimit
+        uint32 callbackGasLimit,
+        uint256 interval
     ) VRFConsumerBaseV2Plus(vRFConsumerBaseV2Plus) {
         i_entranceFee = entranceFee;
         i_keyhash = keyhash;
@@ -57,11 +59,13 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         i_requestConfirmations = requestConfirmations;
         i_callbackGasLimit = callbackGasLimit;
         s_raffleState = RaffleState.OPEN;
+        s_lastTimeStamp = block.timestamp;
+        i_interval = interval;
     }
 
     function enterRaffle() public payable {
         if (msg.value < i_entranceFee) revert Raffle__notEnoughETHEntered();
-        if (s_raffleState !== RaffleState.OPEN) revert Raffle__RaffleNotOpen();
+        if (s_raffleState != RaffleState.OPEN) revert Raffle__RaffleNotOpen();
         s_players.push(payable(msg.sender));
         emit RaffleEnter(msg.sender);
     }
@@ -72,8 +76,16 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         external
         view
         override
-        returns (bool upKeepNeeded, bytes memory performData)
-    {}
+        returns (bool upKeepNeeded, bytes memory /* performData */)
+    {
+        bool isOpen = RaffleState.OPEN == s_raffleState;
+        bool timePassed = (block.timestamp - s_lastTimeStamp) > i_interval;
+        bool hasPlayers = s_players.length > 0;
+        bool hasBalance = address(this).balance > 0;
+        upKeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
+
+        return (upKeepNeeded, "0x0");
+    }
 
     function performUpkeep(bytes calldata performData) external override {}
 
@@ -85,7 +97,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         address payable recentWinner = s_players[indexOfWinner];
         s_recentWinner = recentWinner;
         s_players = new address payable[](0); //reset
-        s_raffleState = RaffleState.OPEN;   //state kembali open
+        s_raffleState = RaffleState.OPEN; //state kembali open
 
         (bool success, ) = recentWinner.call{value: address(this).balance}("");
         if (!success) {
@@ -96,7 +108,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     }
 
     function requestRandomWinner(bool enableNativePayment) external {
-        s_raffleState = RaffleState.CALCULATING;  
+        s_raffleState = RaffleState.CALCULATING;
 
         uint256 requestId = s_vrfCoordinator.requestRandomWords(
             VRFV2PlusClient.RandomWordsRequest({
@@ -115,8 +127,6 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
 
         emit RequestSent(requestId);
     }
-
-    
 
     /**
      * @notice getter for i_entranceFee
