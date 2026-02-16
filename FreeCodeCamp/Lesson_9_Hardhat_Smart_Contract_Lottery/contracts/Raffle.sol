@@ -77,7 +77,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     }
 
     function checkUpkeep(
-        bytes calldata /* checkData */
+        bytes memory /* checkData */
     )
         public
         view
@@ -90,11 +90,11 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         bool hasBalance = address(this).balance > 0;
         upKeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
 
-        return (upKeepNeeded, "0x0");
+        return (upKeepNeeded, "");
     }
 
     function performUpkeep(bytes calldata /* performData */) external override {
-        (bool upKeepNeeded, ) = this.checkUpkeep("");
+        (bool upKeepNeeded, ) = checkUpkeep("");
         if (!upKeepNeeded)
             revert Raffle__UpkeepNotNeeded(
                 address(this).balance,
@@ -130,6 +130,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         address payable recentWinner = s_players[indexOfWinner];
         s_recentWinner = recentWinner;
         s_players = new address payable[](0); //reset
+        s_lastTimeStamp = block.timestamp;
         s_raffleState = RaffleState.OPEN; //state kembali open
 
         (bool success, ) = recentWinner.call{value: address(this).balance}("");
