@@ -85,7 +85,6 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
      *      - Raffle state is not OPEN.
      *      Adds sender to players array and emits RaffleEnter event.
      */
-
     function enterRaffle() public payable {
         if (msg.value < i_entranceFee) revert Raffle__notEnoughETHEntered();
         if (s_raffleState != RaffleState.OPEN) revert Raffle__RaffleNotOpen();
