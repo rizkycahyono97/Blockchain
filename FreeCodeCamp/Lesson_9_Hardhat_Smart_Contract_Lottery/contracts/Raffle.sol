@@ -22,6 +22,14 @@ error Raffle__UpkeepNotNeeded(
     uint256 raffleState
 );
 
+/**
+ * @title Decentralized Raffle Contract
+ * @author Rizky
+ * @notice This contract implements a decentralized raffle system using Chainlink VRF v2.5
+ *         for provable randomness and Chainlink Automation for automatic winner selection.
+ * @dev Inherits VRFConsumerBaseV2Plus and AutomationCompatibleInterface.
+ *      Uses native payment or LINK payment depending on deployment configuration.
+ */
 contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     // types declaration
     enum RaffleState {
@@ -69,6 +77,14 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         i_enableNativePayment = enableNativePayment;
     }
 
+    /**
+     * @notice Allows a user to enter the raffle by paying the entrance fee.
+     * @dev Reverts if:
+     *      - Not enough ETH is sent.
+     *      - Raffle state is not OPEN.
+     *      Adds sender to players array and emits RaffleEnter event.
+     */
+
     function enterRaffle() public payable {
         if (msg.value < i_entranceFee) revert Raffle__notEnoughETHEntered();
         if (s_raffleState != RaffleState.OPEN) revert Raffle__RaffleNotOpen();
@@ -76,6 +92,17 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         emit RaffleEnter(msg.sender);
     }
 
+    /**
+     * @notice Checks whether upkeep conditions are met.
+     * @dev Conditions:
+     *      - Raffle must be OPEN.
+     *      - Time interval must have passed.
+     *      - There must be at least one player.
+     *      - Contract must have ETH balance.
+     *      Called off-chain by Chainlink Automation nodes.
+     * @return upKeepNeeded Boolean indicating whether performUpkeep should be executed.
+     * @return performData Data passed to performUpkeep (unused).
+     */
     function checkUpkeep(
         bytes memory /* checkData */
     )
@@ -93,6 +120,13 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         return (upKeepNeeded, "");
     }
 
+    /**
+     * @notice Executes the raffle winner selection process.
+     * @dev Revalidates upkeep conditions before execution.
+     *      Changes raffle state to CALCULATING.
+     *      Requests random words from Chainlink VRF.
+     *      Emits RequestSent event.
+     */
     function performUpkeep(bytes calldata /* performData */) external override {
         (bool upKeepNeeded, ) = checkUpkeep("");
         if (!upKeepNeeded)
@@ -122,6 +156,17 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         emit RequestSent(requestId);
     }
 
+    /**
+     * @notice Callback function used by Chainlink VRF to deliver randomness.
+     * @dev Can only be called by VRF Coordinator.
+     *      - Calculates winner index using modulo operation.
+     *      - Resets players array.
+     *      - Resets raffle state to OPEN.
+     *      - Updates last timestamp.
+     *      - Transfers contract balance to winner.
+     *      Emits PickedWinner event.
+     * @param _randomWords Array of random numbers provided by VRF.
+     */
     function fulfillRandomWords(
         uint256 /* requestId */,
         uint256[] calldata _randomWords
