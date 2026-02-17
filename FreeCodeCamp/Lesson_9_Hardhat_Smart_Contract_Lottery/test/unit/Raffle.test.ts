@@ -1,6 +1,4 @@
 import { expect } from 'chai';
-import { timeStamp } from 'console';
-import { ContractTransactionResponse } from 'ethers';
 import { network } from 'hardhat';
 
 const { ethers } = await network.connect();
@@ -20,7 +18,8 @@ describe('Raffle - deployment', function () {
   const enableNativePayment = true;
 
   beforeEach(async function () {
-    const [deployer] = await ethers.getSigners();
+    const signers = await ethers.getSigners();
+    deployer = signers[0];
 
     const Raffle = await ethers.getContractFactory('Raffle');
 
@@ -37,7 +36,7 @@ describe('Raffle - deployment', function () {
     await raffle.waitForDeployment();
   });
 
-  describe('Constructor', async function () {
+  describe('Constructor', function () {
     it('should deploy successfully', async function () {
       const address = await raffle.getAddress();
       expect(address).to.not.equal(ethers.ZeroAddress);
@@ -65,6 +64,40 @@ describe('Raffle - deployment', function () {
       const blockTimeStamp = block!.timestamp;
 
       expect(raffleTimeStamp).to.equal(blockTimeStamp);
+    });
+  });
+
+  describe('EnterRaffle', function () {
+    it('reverts when not enough ETH is sent', async function () {
+      await expect(
+        raffle.enterRaffle({ value: 0 })
+      ).to.be.revertedWithCustomError(raffle, 'Raffle__notEnoughETHEntered');
+    });
+
+    it('records player when they enter', async function () {
+      await raffle.enterRaffle({ value: entraceFee });
+      const playerFromContract = await raffle.getPlayer(0);
+      expect(playerFromContract).to.equal(deployer.address);
+    });
+
+    it('emits event on enter', async function () {
+      await expect(raffle.enterRaffle({ value: entraceFee })).to.emit(
+        raffle,
+        'RaffleEnter'
+      );
+    });
+
+    it('reverts when raffle is not open', async function () {
+      await raffle.enterRaffle({ value: entraceFee });
+
+      await ethers.provider.send('evm_increaseTime', [interval + 1]);
+      await ethers.provider.send('evm_mine');
+
+      await raffle.performUpkeep('0x');
+
+      await expect(
+        raffle.enterRaffle({ value: entraceFee })
+      ).to.revertedWithCustomError(raffle, 'Raffle__RaffleNotOpen');
     });
   });
 });
