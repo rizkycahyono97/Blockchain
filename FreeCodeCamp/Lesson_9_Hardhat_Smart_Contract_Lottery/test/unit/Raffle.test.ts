@@ -21,19 +21,39 @@ describe('Raffle - deployment', function () {
     const signers = await ethers.getSigners();
     deployer = signers[0];
 
-    const Raffle = await ethers.getContractFactory('Raffle');
+    // deploy mock
+    const VRFCoordinatorV2_5MockFactory = await ethers.getContractFactory(
+      'VRFCoordinatorV2_5MockWrapper'
+    );
+    const vrfCoordinatorV2_5Mock = await VRFCoordinatorV2_5MockFactory.deploy(
+      ethers.parseEther('0.1'),
+      1e9,
+      4e15
+    );
 
-    raffle = await Raffle.deploy(
-      vrfCoordinator,
+    //create subscription
+    const tx = await vrfCoordinatorV2_5Mock.createSubscription();
+    const txReceipt = await tx.wait(1);
+    const subId = (txReceipt?.logs[0] as any).args.subId;
+    await vrfCoordinatorV2_5Mock.fundSubscription(
+      subId,
+      ethers.parseEther('100')
+    );
+
+    //deploy rafle
+    const raffleFactory = await ethers.getContractFactory('Raffle');
+    raffle = await raffleFactory.deploy(
+      await vrfCoordinatorV2_5Mock.getAddress(), //local
       entraceFee,
       keyHash,
-      subscriptionId,
+      subId,
       callBackGasLimit,
       interval,
       enableNativePayment
     );
 
-    await raffle.waitForDeployment();
+    // await raffle.waitForDeployment();
+    await vrfCoordinatorV2_5Mock.addConsumer(subId, await raffle.getAddress());
   });
 
   describe('Constructor', function () {
@@ -63,7 +83,7 @@ describe('Raffle - deployment', function () {
 
       const blockTimeStamp = block!.timestamp;
 
-      expect(raffleTimeStamp).to.equal(blockTimeStamp);
+      expect(raffleTimeStamp).to.closeTo(Number(blockTimeStamp), 5);
     });
   });
 
