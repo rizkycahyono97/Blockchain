@@ -1,10 +1,9 @@
-import { rejects } from 'assert';
 import { expect } from 'chai';
 import { network } from 'hardhat';
 
 const { ethers } = await network.connect();
 
-describe('Raffle - deployment', function () {
+describe('Raffle - local unit test', function () {
   let raffle: any;
   let deployer: any;
   let vrfCoordinatorV2_5Mock: any;
