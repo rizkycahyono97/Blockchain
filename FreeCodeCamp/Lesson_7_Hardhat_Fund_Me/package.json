@@ -27,7 +27,7 @@
     "node": "hardhat node",
     "compile": "hardhat compile",
     "deploy:local": "hardhat ignition deploy ./ignition/modules/FundMeLocal.ts --network localhost",
-    "deploy:sepolia": "hardhat ignition deploy ./ignition/modules/FundMeSepolia.ts --network sepolia",
+    "deploy:sepolia": "hardhat ignition deploy ./ignition/modules/FundMeSopolia.ts --network sepolia  --parameters ./ignition/parameters.json",
     "fund:local": "hardhat run scripts/fund.ts --network localhost",
     "fund:sepolia": "hardhat run scripts/fund.ts --network sepolia",
     "withdraw:local": "hardhat run scripts/withdraw.ts --network localhost",
