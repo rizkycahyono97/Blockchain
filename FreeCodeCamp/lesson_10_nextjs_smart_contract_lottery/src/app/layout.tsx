@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
+// wagmiProvider
+import { Web3Provider } from '../provider/Web3Provider';
+
 // layout
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
@@ -31,11 +34,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased text-gray-900`}
       >
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="grow">{children}</main>
-          <Footer />
-        </div>
+        <Web3Provider>
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="grow">{children}</main>
+            <Footer />
+          </div>
+        </Web3Provider>
       </body>
     </html>
   );
