@@ -1,6 +1,12 @@
+'use client';
+
 import ConnectWallet from '@/src/components/wallet/ConnectWallet';
+import { useConnection } from 'wagmi';
+import Link from 'next/link';
 
 export default function HomePage() {
+  const { isConnected } = useConnection();
+
   return (
     <main>
       <div className="relative isolate px-6 pt-14 lg:px-8">
@@ -48,14 +54,49 @@ export default function HomePage() {
                 </p>
               </div>
 
-              {/* Link Tambahan */}
-              <div className="flex items-center gap-x-6 mt-4">
-                <a
-                  href="#rules"
-                  className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600 transition-colors"
-                >
-                  Cara Bermain <span aria-hidden="true">→</span>
-                </a>
+              {/* Link ke lottery */}
+              <div className="flex justify-between p-4 border-b">
+                {isConnected ? (
+                  <div className="flex flex-col items-center text-center space-y-4">
+                    <div className="bg-green-50 p-4 rounded-full">
+                      <span className="text-2xl">🎉</span>
+                    </div>
+                    <div className="space-y-1">
+                      <h2 className="text-xl font-bold text-gray-900">
+                        Dompet Terhubung!
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        Kamu sudah siap untuk mengikuti undian berhadiah.
+                      </p>
+                    </div>
+
+                    <Link
+                      href="/lottery"
+                      className="mt-4 px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all transform active:scale-95 shadow-lg shadow-blue-200"
+                    >
+                      Masuk ke Arena Lottery
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="text-center space-y-4">
+                    <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                      <h2 className="text-xl font-bold text-yellow-800">
+                        Dompet Belum Terhubung
+                      </h2>
+                      <p className="text-yellow-700 text-sm mt-1">
+                        Hubungkan dompet kamu melalui tombol di pojok kanan atas
+                        untuk mulai bermain.
+                      </p>
+                    </div>
+
+                    <button
+                      disabled
+                      className="px-8 py-3 bg-gray-200 text-gray-400 font-bold rounded-xl cursor-not-allowed"
+                    >
+                      Akses Terkunci
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
