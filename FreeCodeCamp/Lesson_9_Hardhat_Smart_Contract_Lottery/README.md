@@ -1,57 +1,109 @@
-# Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
+# 🎟️ Decentralized Raffle (Lottery) DApp
 
-This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
+Proyek ini adalah implementasi sistem undian terdesentralisasi menggunakan **Chainlink VRF v2.5** untuk keacakan yang terbukti (provable randomness) dan **Chainlink Automation** untuk eksekusi pemilihan pemenang secara otomatis berdasarkan interval waktu.
 
-To learn more about the Hardhat 3 Beta, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3 Beta](https://hardhat.org/hardhat3-beta-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+## 📝 Penjelasan Kontrak
 
-## Project Overview
+Kontrak `Raffle.sol` memiliki alur kerja sebagai berikut:
 
-This example project includes:
+1. **Enter Raffle**: User masuk dengan membayar sejumlah `entranceFee`.
+2. **Check Upkeep**: Chainlink Automation mengecek apakah waktu sudah habis, ada pemain, dan kontrak memiliki saldo.
+3. **Perform Upkeep**: Jika kondisi terpenuhi, kontrak meminta angka acak ke Chainlink VRF.
+4. **Fulfill Random Words**: Chainlink VRF mengirimkan angka acak, kontrak menentukan pemenang, mengirimkan saldo kontrak ke pemenang, dan mereset sistem untuk ronde berikutnya.
 
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
+---
 
-## Usage
+## 📁 Struktur Folder (Hardhat)
 
-### Running Tests
-
-To run all the tests in the project, execute the following command:
-
-```shell
-npx hardhat test
+```text
+.
+├── contracts/
+│   ├── Raffle.sol
+│   └── test
+|        |--VRFCoordinatorV2_5Mock.sol
+│
+├── ignition/
+│   ├── modules/
+│   │   ├── RaffleLocal.ts
+│   │   └── RaffleSepolia.ts
+│   │   └── MockV3Coordinator.ts
+│   └── deployments/
+│
+├── scripts/
+│
+├── test/
+│   ├── unit/
+│   └── staging/
+│
+├── hardhat.config.ts
+├── package.json
+└── README.md
 ```
 
-You can also selectively run the Solidity or `mocha` tests:
+---
 
-```shell
-npx hardhat test solidity
-npx hardhat test mocha
+## 🚀 Setup Project
+
+1. **Clone & Install Dependencies:**
+
+```bash
+git clone https://github.com/rizkycahyono97/Blockchain
+cd Blockchain/FreeCodeCamp/Lesson_9_Hardhat_Smart_Contract_Lottery
+pnpm install
+
 ```
 
-### Make a deployment to Sepolia
+2. **Konfigurasi Environment:**
+   saya menggunakan keystore dari hardhat 3:
 
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
+```env
+pnpm hardhat keystore set SEPOLIA_RPC_URL
+pnpm hardhat keystore set SEPOLIA_PRIVATE_KEY
 
-To run the deployment to a local chain:
-
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
 ```
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
+---
 
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
+## 🛠️ Deployment
 
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
+### 1. Local Network (Hardhat Node)
 
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+Sangat berguna untuk pengujian cepat tanpa biaya gas asli.
+
+```bash
+# Menjalankan node lokal
+pnpm hardhat node
+
+# Deploy ke node lokal menggunakan ignition
+pnpm hardhat ignition deploy ./ignition/modules/RaffleLocal.ts
+
 ```
 
-After setting the variable, you can run the deployment with the Sepolia network:
+### 2. Sepolia Testnet
 
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
+Pastikan kamu memiliki saldo **Sepolia ETH** dan sudah membuat **VRF Subscription** di [vrf.chain.link](https://vrf.chain.link) dan **Chainlink Automation** di [automation.chain.link](https://automation.chain.link).
+
+```bash
+pnpm hardhat ignition deploy ./ignition/modules/RaffleLocal.ts --network sepolia --parameters ./ignition/parameters.json
+
 ```
+
+---
+
+## 🧪 Testing
+
+Menjalankan unit test untuk memastikan logika `enterRaffle`, `checkUpkeep`, dan `fulfillRandomWords` berjalan benar:
+
+```bash
+pnpm hardhat test
+
+```
+
+---
+
+# 👨‍💻 Author
+
+Rizky Cahyono Putra
+GitHub: [https://github.com/rizkycahyono97](https://github.com/rizkycahyono97)
+
+---
