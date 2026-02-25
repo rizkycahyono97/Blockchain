@@ -1,28 +1,90 @@
 'use client';
 
-import { useReadContract } from 'wagmi';
+import { useReadContracts } from 'wagmi';
 import { wagmiContractConfig } from '@/src/config/wagmiContractConfig';
 import { formatEther } from 'viem';
+import { Users, Trophy, Ticket } from 'lucide-react';
 
 export function LotteryEntranceStatus() {
-  const {
-    data: entranceFee,
-    isLoading,
-    error
-  } = useReadContract({
-    ...wagmiContractConfig,
-    functionName: 'getEntrance'
+  const { data, isLoading, error } = useReadContracts({
+    contracts: [
+      {
+        ...wagmiContractConfig,
+        functionName: 'getEntrance'
+      },
+      {
+        ...wagmiContractConfig,
+        functionName: 'getNumberOfPlayer'
+      },
+      {
+        ...wagmiContractConfig,
+        functionName: 'getRecentWinner'
+      }
+    ]
   });
 
-  if (isLoading) return <div>Fetching entrance fee...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  const entranceFee = data?.[0]?.result as bigint | undefined;
+  const totalPlayers = data?.[1]?.result as bigint | undefined;
+  const recentWinner = data?.[2]?.result as string | undefined;
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-pulse">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="h-24 bg-gray-100 rounded-xl border" />
+        ))}
+      </div>
+    );
+  }
+
+  if (error)
+    return <div className="text-red-500 text-sm">Error: {error.message}</div>;
 
   return (
-    <div className="p-4 border rounded-xl bg-blue-50">
-      <h3 className="text-sm font-medium text-blue-600">Entrance Fee</h3>
-      <p className="text-2xl font-bold">
-        {entranceFee ? formatEther(entranceFee as bigint) : '0'} ETH
-      </p>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Entrance Fee Card */}
+      <div className="p-4 border rounded-xl bg-white shadow-sm border-blue-100">
+        <div className="flex items-center gap-3 mb-2 text-blue-600">
+          <Ticket size={20} />
+          <h3 className="text-xs font-semibold uppercase tracking-wider">
+            Entrance Fee
+          </h3>
+        </div>
+        <p className="text-2xl font-bold text-gray-900">
+          {entranceFee ? `${formatEther(entranceFee)} ETH` : '0 ETH'}
+        </p>
+      </div>
+
+      {/* Total Players Card */}
+      <div className="p-4 border rounded-xl bg-white shadow-sm border-purple-100">
+        <div className="flex items-center gap-3 mb-2 text-purple-600">
+          <Users size={20} />
+          <h3 className="text-xs font-semibold uppercase tracking-wider">
+            Total Players
+          </h3>
+        </div>
+        <p className="text-2xl font-bold text-gray-900">
+          {totalPlayers ? totalPlayers.toString() : '0'}
+        </p>
+      </div>
+
+      {/* Recent Winner Card */}
+      <div className="p-4 border rounded-xl bg-white shadow-sm border-green-100">
+        <div className="flex items-center gap-3 mb-2 text-green-600">
+          <Trophy size={20} />
+          <h3 className="text-xs font-semibold uppercase tracking-wider">
+            Recent Winner
+          </h3>
+        </div>
+        <p
+          className="text-sm font-mono font-bold text-gray-900 truncate"
+          title={recentWinner}
+        >
+          {recentWinner
+            ? `${recentWinner.slice(0, 6)}...${recentWinner.slice(-4)}`
+            : 'No winner yet'}
+        </p>
+      </div>
     </div>
   );
 }

@@ -2,9 +2,8 @@ import { LotteryEntranceStatus } from '@/src/components/lottery/LotteryEntraceSt
 
 export default function lotteryPage() {
   return (
-    <>
-      <h1>Lottery Page</h1>
+    <div className="mt-5">
       <LotteryEntranceStatus />
-    </>
+    </div>
   );
 }
