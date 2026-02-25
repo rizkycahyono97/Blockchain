@@ -93,12 +93,14 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     }
 
     /**
-     * @notice Checks whether upkeep conditions are met.
+     * @notice Checks whether upkeep conditions are met, i use chainlink for checkup my contract
      * @dev Conditions:
      *      - Raffle must be OPEN.
      *      - Time interval must have passed.
      *      - There must be at least one player.
      *      - Contract must have ETH balance.
+     *      - https://automation.chain.link/
+     *      - https://docs.chain.link/chainlink-automation/guides/register-upkeep
      *      Called off-chain by Chainlink Automation nodes.
      * @return upKeepNeeded Boolean indicating whether performUpkeep should be executed.
      * @return performData Data passed to performUpkeep (unused).
