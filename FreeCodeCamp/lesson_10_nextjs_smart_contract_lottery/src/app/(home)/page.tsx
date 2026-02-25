@@ -10,21 +10,18 @@ export default function HomePage() {
   return (
     <main>
       <div className="relative isolate px-6 pt-14 lg:px-8">
-        {/* Efek Background Blur (Glassmorphism style) */}
         <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
           <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#3b82f6] to-[#9333ea] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
         </div>
 
         <div className="mx-auto max-w-2xl py-20 sm:py-32">
           <div className="text-center">
-            {/* Badge Status */}
             <div className="mb-8 flex justify-center">
               <div className="relative rounded-full px-4 py-1 text-sm leading-6 text-blue-600 ring-1 ring-blue-600/20 bg-blue-50/50 font-medium">
                 Web3 Lottery is live on Sepolia Testnet 🚀
               </div>
             </div>
 
-            {/* Judul Utama */}
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
               Decentralized <span className="text-blue-600">Lottery</span>{' '}
               System
@@ -36,14 +33,13 @@ export default function HomePage() {
               terdesentralisasi.
             </p>
 
-            {/* Area Interaksi Wallet */}
             <div className="mt-10 flex flex-col items-center justify-center gap-y-6">
               <div className="w-full max-w-md p-8 bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl shadow-blue-100 border border-white">
                 <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6 text-center">
                   WALLET GATEWAY
                 </h2>
 
-                {/* Memanggil Komponen Connect Wallet */}
+                {/* connect wallet */}
                 <div className="flex flex-col items-center gap-4">
                   <ConnectWallet />
                 </div>
@@ -54,7 +50,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              {/* Link ke lottery */}
+              {/* button lottery */}
               <div className="flex justify-between p-4 border-b">
                 {isConnected ? (
                   <div className="flex flex-col items-center text-center space-y-4">
@@ -84,8 +80,7 @@ export default function HomePage() {
                         Dompet Belum Terhubung
                       </h2>
                       <p className="text-yellow-700 text-sm mt-1">
-                        Hubungkan dompet kamu melalui tombol di pojok kanan atas
-                        untuk mulai bermain.
+                        Hubungkan dompet kamu melalui opsi diatas.
                       </p>
                     </div>
 
@@ -102,7 +97,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Dekorasi Bawah */}
         <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
           <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#60a5fa] to-[#c084fc] opacity-20 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"></div>
         </div>
