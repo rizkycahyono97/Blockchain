@@ -59,6 +59,7 @@ pnpm install
 ```env
 pnpm hardhat keystore set SEPOLIA_RPC_URL
 pnpm hardhat keystore set SEPOLIA_PRIVATE_KEY
+pnpm hardhat keystore set ETHERSCAN_API_KEY
 
 ```
 
@@ -73,7 +74,7 @@ pnpm hardhat keystore set SEPOLIA_PRIVATE_KEY
    "keyhash": "0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae" #didapatkan setelah subscription di https://vrf.chain.link/
    "subscriptionId": "3164034294253410651808734757551068321995027107544723401724235403739742561102", #didapatkan setelah subscription di https://vrf.chain.link/
    "callbackGasLimit": 500000,
-   "interval": 60,
+   "interval": 60, #interval waktu untuk checkUpKeep chainlink
    "enableNativePayment": true
 }
 ```
@@ -110,11 +111,11 @@ pnpm hardhat ignition deploy ./ignition/modules/RaffleSepolia.ts --network sepol
 
 ### 1. Fill Consumer in VRF (https://vrf.chain.link/)
 
-After successfully deploying on the Sepolia network, enter the address as a consumer in the VRF.
+Setelah sukses mendeploy contract di chainlink, masukan address tadi ke **Consumer** di **VRF Chainlink**.
 
 ### 2. Fill Address in Automation (https://automation.chain.link/)
 
-And also, enter the address as a consumer in the subscription automation.
+Masukan juga address tadi ke **Chainlink Automation**.
 
 ---
 
