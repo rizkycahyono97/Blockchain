@@ -107,13 +107,13 @@ pnpm hardhat ignition deploy ./ignition/modules/RaffleSepolia.ts --network sepol
 
 ---
 
-## 🚀 After Deployment
+## 🚀 Setelah Deployment
 
-### 1. Fill Consumer in VRF (https://vrf.chain.link/)
+### 1. Isi Consumer di Chainlink VRF (https://vrf.chain.link/)
 
 Setelah sukses mendeploy contract di chainlink, masukan address tadi ke **Consumer** di **VRF Chainlink**.
 
-### 2. Fill Address in Automation (https://automation.chain.link/)
+### 2. Isi Alamat Kontrak di Chainlink Automation (https://automation.chain.link/)
 
 Masukan juga address tadi ke **Chainlink Automation**.
 
