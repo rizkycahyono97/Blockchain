@@ -23,6 +23,11 @@ export function LotteryEntranceStatus() {
       {
         ...wagmiContractConfig,
         functionName: 'getRaffleState'
+      },
+      {
+        ...wagmiContractConfig,
+        functionName: 'checkUpkeep',
+        args: ['0x']
       }
     ]
   });
@@ -31,6 +36,7 @@ export function LotteryEntranceStatus() {
   const totalPlayers = data?.[1]?.result as bigint | undefined;
   const recentWinner = data?.[2]?.result as string | undefined;
   const raffleState = data?.[3]?.result as number | undefined;
+  const checkUpkeep = data?.[4]?.result as boolean | undefined;
 
   if (isLoading) {
     return (
@@ -44,6 +50,8 @@ export function LotteryEntranceStatus() {
 
   if (error)
     return <div className="text-red-500 text-sm">Error: {error.message}</div>;
+
+  console.log('checkUpKeep: ', checkUpkeep);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
