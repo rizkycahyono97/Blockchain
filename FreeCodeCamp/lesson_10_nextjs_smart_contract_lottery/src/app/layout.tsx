@@ -34,16 +34,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased text-gray-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased text-gray-900 bg-white`}
       >
         <Web3Provider>
           <WalletObserver />
+
           <div className="flex flex-col min-h-screen">
             <Navbar />
-            <main className="grow">{children}</main>
-            <Toaster position="top-center" />
+
+            <main className="grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              {children}
+            </main>
+
             <Footer />
           </div>
+
+          <Toaster position="top-right" richColors closeButton />
         </Web3Provider>
       </body>
     </html>
