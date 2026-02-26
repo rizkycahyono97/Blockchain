@@ -29,18 +29,27 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-5xl font-extrabold tracking-tight text-gray-900 sm:text-7xl mb-6">
-            Win Big with <br />
+            Simple Project <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              On-Chain Fairness
+              Ethereum Lottery
             </span>
           </h1>
 
           <p className="max-w-2xl mx-auto text-lg text-gray-600 leading-relaxed mb-12">
-            Selamat datang, **Ch4rl0tt3**. Platform ini menggunakan Chainlink
-            VRF untuk memastikan setiap pemenang dipilih secara acak,
-            transparan, dan tidak dapat dimanipulasi.
+            Selamat datang di platform undian masa depan yang sepenuhnya
+            berjalan di atas
+            <span className="font-semibold text-gray-900">
+              {' '}
+              Smart Contract Ethereum
+            </span>
+            . Tanpa perantara, tanpa admin manual, semua logika permainan
+            dikunci secara on-chain menggunakan{' '}
+            <span className="font-semibold text-gray-900">
+              {' '}
+              Chainlink VRF
+            </span>{' '}
+            untuk menjamin transparansi mutlak bagi setiap partisipan.
           </p>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-16 text-left">
             {/* Left Side: Game Steps */}
             <div className="space-y-8">
