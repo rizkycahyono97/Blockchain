@@ -22,6 +22,7 @@ error Raffle__UpkeepNotNeeded(
     uint256 numPlayers,
     uint256 raffleState
 );
+error Raffle_PlayerIsEnough();
 
 /**
  * @title Decentralized Raffle Contract
@@ -46,6 +47,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     uint32 private immutable i_callbackGasLimit;
     uint16 private constant REQUEST_CONFIRMATION = 3;
     uint32 private constant NUMWORDS = 1;
+    uint256 private constant MIN_PLAYERS = 3;
 
     // lottery variable
     address private s_recentWinner;
@@ -88,6 +90,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     function enterRaffle() public payable {
         if (msg.value < i_entranceFee) revert Raffle__notEnoughETHEntered();
         if (s_raffleState != RaffleState.OPEN) revert Raffle__RaffleNotOpen();
+        if (s_players.length >= MIN_PLAYERS) revert Raffle_PlayerIsEnough();
         s_players.push(payable(msg.sender));
         emit RaffleEnter(msg.sender);
     }
@@ -115,7 +118,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     {
         bool isOpen = RaffleState.OPEN == s_raffleState;
         bool timePassed = (block.timestamp - s_lastTimeStamp) > i_interval;
-        bool hasPlayers = s_players.length > 0;
+        bool hasPlayers = s_players.length >= MIN_PLAYERS;
         bool hasBalance = address(this).balance > 0;
         upKeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
 
@@ -225,5 +228,9 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
 
     function getRequestInformations() public pure returns (uint16) {
         return REQUEST_CONFIRMATION;
+    }
+
+    function getMinPlayers() public pure returns (uint256) {
+        return MIN_PLAYERS;
     }
 }

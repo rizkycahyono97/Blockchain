@@ -92,7 +92,7 @@ Sangat berguna untuk pengujian cepat tanpa biaya gas asli.
 pnpm hardhat node
 
 # Deploy ke node lokal menggunakan ignition
-pnpm hardhat ignition deploy ./ignition/modules/RaffleLocal.ts
+pnpm hardhat ignition deploy ./ignition/modules/RaffleLocal.ts --network localhost
 
 ```
 
