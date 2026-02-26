@@ -119,6 +119,14 @@ Masukan juga address tadi ke **Chainlink Automation**.
 
 ---
 
+## 🧪 Etherscan
+
+```bash
+pnpm hardhat verify --network sepolia <ALAMAT_KONTRAK> "<vRFConsumerBaseV2Plus>" "<entranceFee>" "<keyhash>" "<subscriptionId>" "<callbackGasLimit>" "<interval>" "<enableNativePayment>"
+```
+
+---
+
 ## 🧪 Testing
 
 Menjalankan unit test untuk memastikan logika `enterRaffle`, `checkUpkeep`, dan `fulfillRandomWords` berjalan benar:
