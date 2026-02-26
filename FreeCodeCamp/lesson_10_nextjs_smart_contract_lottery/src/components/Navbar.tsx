@@ -13,33 +13,20 @@ export const Navbar = () => {
             SMART LOTTERY<span className="text-blue-600">.</span>
           </Link>
 
-          {/* <div className="hidden md:flex gap-10 text-sm font-semibold text-gray-500">
+          <div className="hidden md:flex gap-10 text-sm font-semibold text-gray-500">
             <Link href="/" className="hover:text-blue-600 transition-colors">
               Home
             </Link>
-            <Link
-              href="/lottery"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Lottery
+            <Link href="#" className="hover:text-blue-600 transition-colors">
+              Hardhat
             </Link>
-            <Link
-              href="/blog"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Blog
+            <Link href="#" className="hover:text-blue-600 transition-colors">
+              Wagmi
             </Link>
-            <Link
-              href="/about"
-              className="hover:text-blue-600 transition-colors"
-            >
-              About
+            <Link href="#" className="hover:text-blue-600 transition-colors">
+              Nextjs
             </Link>
-          </div> */}
-
-          {/* <div className="flex items-center gap-10">
-            <ConnectWallet />
-          </div> */}
+          </div>
         </div>
       </div>
     </nav>

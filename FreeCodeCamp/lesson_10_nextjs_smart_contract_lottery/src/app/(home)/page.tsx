@@ -24,7 +24,7 @@ export default function HomePage() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
             <span className="text-xs font-bold text-blue-700 uppercase tracking-widest">
-              Sepolia Testnet Live
+              Sepolia Testnet Network
             </span>
           </div>
 
@@ -36,8 +36,8 @@ export default function HomePage() {
           </h1>
 
           <p className="max-w-2xl mx-auto text-lg text-gray-600 leading-relaxed mb-12">
-            Selamat datang di platform undian masa depan yang sepenuhnya
-            berjalan di atas
+            Selamat datang di simple project lottery yang sepenuhnya berjalan di
+            atas
             <span className="font-semibold text-gray-900">
               {' '}
               Smart Contract Ethereum
