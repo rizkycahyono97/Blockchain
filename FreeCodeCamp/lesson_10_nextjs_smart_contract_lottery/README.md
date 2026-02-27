@@ -77,7 +77,7 @@ NEXT_PUBLIC_RAFFLE_ADDRESS=CONTRACTADDRESS
 
 ### 4. Konfigurasi Constants
 
-Masukan **ABI** hasil compile dari contract lottery, berikut contohnya:
+Masukan **ABI** hasil compile dari contract lottery di directory _./constants/raffle-abi.json_, berikut contohnya:
 
 ```bash
 {
