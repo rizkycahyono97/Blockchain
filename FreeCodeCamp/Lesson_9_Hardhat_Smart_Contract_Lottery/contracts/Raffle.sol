@@ -81,7 +81,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     }
 
     /**
-     * @notice Allows a user to enter the raffle by paying the entrance fee.
+     * @notice function untuk entrance fee user pertama kali masuk
      * @dev Reverts if:
      *      - Not enough ETH is sent.
      *      - Raffle state is not OPEN.
@@ -96,7 +96,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     }
 
     /**
-     * @notice Checks whether upkeep conditions are met, i use chainlink for checkup my contract
+     * @notice otomatis akan dicek oleh chainlink automation, dengan beberapa kriteria harus true
      * @dev Conditions:
      *      - Raffle must be OPEN.
      *      - Time interval must have passed.
@@ -126,7 +126,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     }
 
     /**
-     * @notice Executes the raffle winner selection process.
+     * @notice mengeksekusi  pemenang lottery secara otomatis menggunakan VRF chainlink
      * @dev Revalidates upkeep conditions before execution.
      *      Changes raffle state to CALCULATING.
      *      Requests random words from Chainlink VRF.
