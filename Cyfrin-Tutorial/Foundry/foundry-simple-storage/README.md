@@ -95,6 +95,30 @@ forge script script/SimpleStorage.s.sol --rpc-url $SEPOLIA_RPC_URL --account $PR
 
 ---
 
+## ⌨️ Interaksi Langsung (Cast CLI)
+
+Selain menggunakan script, Anda dapat berinteraksi langsung dengan kontrak yang sudah di-deploy menggunakan `cast`. Ini sangat berguna untuk debugging cepat di terminal.
+
+### 1. Melihat Bytecode Kontrak
+
+Untuk memastikan kontrak sudah ter-deploy pada alamat tertentu:
+
+```bash
+1. cast code <CONTRACT_ADDRESS> --rpc-url http://localhost:8545
+2. cast call <CONTRACT_ADDRESS> "retrieve()" --rpc-url http://localhost:8545
+3. cast send <CONTRACT_ADDRESS> "store(uint256)" 20 \
+--account yourAccountName \
+--rpc-url http://localhost:8545
+```
+
+Foundry juga menyediakan alat bantu untuk konversi unit:
+
+Hex ke Desimal: cast --to-dec 0x14
+
+Ether ke Wei: cast --to-wei 1 ether
+
+---
+
 ## 🧪 Pengujian (Testing)
 
 Menjalankan semua test:
